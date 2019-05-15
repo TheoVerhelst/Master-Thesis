@@ -1,0 +1,93 @@
+\documentclass[a4paper,11pt]{memoir}
+
+\usepackage{hyperref}
+\usepackage[margin=3cm, left=3.5cm]{geometry}
+\usepackage[backend=biber, style=apa]{biblatex}
+\usepackage[french,english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx} % includegraphics
+\usepackage{url} % url
+\usepackage{tikz} % tikz images
+\usepackage{bm} % bold font math
+\usepackage{soul} % ???
+\usepackage{tabularx} % Equal-size column tables
+\usepackage{booktabs} % nice tables
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{enumerate} % improvement over lists
+\usepackage{pifont} % ticks and cross characters
+\usepackage{subcaption} % sub-figures
+
+\definecolor{themeblue}{RGB}{20, 116, 230}
+\definecolor{darkerblue}{RGB}{5, 71, 149}
+\definecolor{lightblue}{RGB}{103,163,235}
+
+\definecolor{themeyellow}{RGB}{255, 241, 1}
+\definecolor{darkeryellow}{RGB}{228, 215, 0}
+\definecolor{lightyellow}{RGB}{255,246,99}
+
+\definecolor{themeorange}{RGB}{255, 156, 1}
+\definecolor{darkerorange}{RGB}{228, 140, 0}
+\definecolor{lightorange}{RGB}{255,195,99}
+
+\definecolor{themepurple}{RGB}{126, 18, 231}
+\definecolor{darkerpurple}{RGB}{81, 5, 154}
+\definecolor{lightpurple}{RGB}{170,102,236}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\newcommand{\TP}{\textit{TP}}
+\newcommand{\FP}{\textit{FP}}
+\newcommand{\TN}{\textit{TN}}
+\newcommand{\FN}{\textit{FN}}
+\newcommand{\Fmeasure}{\textit{F1}}
+\newcommand{\precision}{\textit{precision}}
+\newcommand{\recall}{\textit{recall}}
+\newcommand{\TPR}{\textit{TPR}}
+\newcommand{\FPR}{\textit{FPR}}
+\newcommand{\lift}{\textit{lift}}
+\newcommand{\AUC}{\textit{AUC}}
+\newcommand{\MB}{\textbf{MB}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X} % Centered, equal-width table column
+
+\newcommand{\ok}{\textcolor{green}{\ding{52}}}
+\newcommand{\nok}{\textcolor{red}{\ding{53}}}
+
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes}
+\usetikzlibrary{positioning}
+\usetikzlibrary{backgrounds}
+
+\hypersetup{
+	bookmarks = true,
+    unicode = true,
+	pdfauthor = {Théo Verhelst},
+    pdftitle = {Churn Prediction and Causal Analysis on Telecom Customer Data},
+}
+
+\linespread{1.1}
+
+\addbibresource{churn.bib}
+
+\author{Théo Verhelst}
+\title{Churn Prediction and Causal Analysis on Telecom Customer Data}
+
+\begin{document}
+\frontmatter
+\input{chapters/preamble.tex}
+\mainmatter
+\input{chapters/intro.tex}
+\input{chapters/sota.tex}
+\input{chapters/predictive.tex}
+\input{chapters/causal.tex}
+\input{chapters/conclusion.tex}
+\input{chapters/appendix.tex}
+
+\end{document}

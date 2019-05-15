@@ -1,0 +1,288 @@
+\chapter{State of the art}
+\label{ch:sota}
+
+\section{Churn prediction}
+
+We organize our presentation of the state of the art in churn prediction by
+considering 4 aspects of interest in a usual churn prediction process: learning
+algorithm, data preprocessing, class balancing and choice of an evaluation
+measure.
+
+\paragraph{Learning algorithm} A large number of machine learning models have
+been applied to churn prediction in the literature. While some studies focus on
+simple and interpretable models \parencite{keramati2014improved,
+dahiya2015customer}, other studies prefer the use of more complex models, at the
+expense of direct interpretation. These methods include boosting applied on
+simple classifiers \parencite{vafeiadis2015comparison}, random forests, support
+vector machine, gradient boosting, among others
+\parencite{umayaparvathi2016attribute, verbeke2012new}. An extensive overview of
+the current trends in churn prediction models is given in
+\parencite{kayaalp2017review}.
+
+\paragraph{Data preprocessing} While the choice of model is important, it is
+equally important to consider a proper choice of features, data preprocessing
+and evaluation measure. Feature choice is limited by the available data
+infrastructure and usually consists of call detail records on the course of a
+few weeks. (Huang 2012) presented however how new kinds of features, including
+demographics profiles, marketing segments, and complaint information, can improve
+prediction accuracy.
+
+Data preprocessing refers to the process following data acquisition and
+consists of modifying the data in various ways before the use in a predictive
+model. This comprises, non-exhaustively, feature engineering, data reduction,
+anomalies removal, encoding of categorical variables, and data normalization
+\parencite{zhang2003data}. \textcite{coussement2017comparative} give an overview
+of common preprocessing steps used in churn prediction, and how careful
+preprocessing can positively affect the performance of the model. They even show
+that a simple logistic regression model applied to optimally preprocessed data
+competes with complex learning algorithms such as neural network or support
+vector machine applied on data preprocessed with a basic preparation procedure.
+
+Recent years have witnessed the widespread usage of network-based classification
+for churn prediction. \textcite{verbeke2014social} present some experiment in
+this area of research. \parencite{oskarsdottir2017social} perform an extensive
+benchmark of the different techniques proposed in the literature. The approach
+is based on call detail records (CDR) containing the communication logs of the
+subscribers. This data can be organized as a graph where nodes represent
+customers and edges represent social ties between customers. The basic
+assumption of network-based classifiers, which use such graphs to classify
+customers as churners or non-churners, is that customers having social ties with
+churners are more likely to churn themselves. This assumption is purposely
+loosely defined, as its exact implementation implies different assumptions and
+modeling decisions \parencite{oskarsdottir2017social}. From that, one can either
+construct a predictive model that directly uses the social graph, or extract
+features from the network and use them as the input of a conventional
+classifier, or even combine the two approaches. The outcome of the two articles
+is that relational and classical non-relational classifiers detect different
+types of churners and that a combination of both types of classifiers
+approaches performs best.
+
+\textcite{oskarsdottir2018time} present a novel, end-to-end approach to the
+problem of churn detection where a time-varying social network of the customer
+base is constructed, and a multivariate time series is then extracted for each
+customer from this network. Then, different time series classifiers are used to
+predict churn. A novel multivariate time series classifier is proposed, an
+adaptation of the similarity forest classifier \parencite{sathe2017similarity}.
+\textcite{oskarsdottir2018time} conclude that their approach outperforms
+state-of-the-art time series classifiers and non-time-based models for early
+churn prediction. However, static random forest and logistic regression are
+better at predicting late churn (that is, on short time scales).
+
+\paragraph{Class balancing} It is important to consider class imbalance when
+designing models for churn prediction. Indeed, the number of churners is usually
+very low compared to the total number of customers, and most machine learning
+models are usually not suited to handle highly imbalanced data
+\parencite{batista2004study}. Class balancing techniques have to be used to
+tackle this problem. These techniques can roughly be divided into two
+categories: data-level balancing and model-level balancing. Data-level balancing
+consists in modifying the dataset by either decreasing the number of majority
+instances, increasing the number of minority instances, or both. Model-level
+balancing consists in modifying the learning algorithm in such a way that
+minority instances are given more importance, often through the use of
+asymmetric misclassification costs \parencite{zhu2017empirical}.
+
+\paragraph{Evaluation measure} The last step of a predictive model assessment is
+the evaluation of classification performance. Several performance measures exist
+for this purpose, such as precision, recall, F-score, area under the receiver
+operating characteristic curve (AUC), lift, maximum profit criterion, and
+expected maximum profit criterion. We briefly explain here these measures and
+their current use in the literature.
+
+Precision is the fraction of true churners among all those we predicted to be
+churners, and recall is the fraction of predicted churners among all the true
+churners in the population.
+
+\begin{align*}
+    \precision &= P(y=1|s>t)\\
+    \recall    &= P(s>t|y=1)
+\end{align*}
+
+In order to optimize both of these scores at the same time, one can use the
+F-score (also called F1 score, or F-measure), which is the harmonic mean of
+precision and recall.
+
+\[\Fmeasure = \frac{2\times \precision \times \recall}{\precision + \recall}\]
+
+By using the harmonic mean, we punish low values in any of the two values. It is
+sometimes used in the churn prediction literature \parencite{ahmed2017churn,
+keramati2014improved}.
+
+Receiver operating characteristic (ROC) curve \parencite{krzanowski2009roc} is a
+plot of all possible compromises between true positive rate (TPR) and false
+positive rate (FPR). TPR is another name for recall, and FPR is the fraction of
+non-churners falsely predicted to be churners, among all non-churners.
+
+\[\FPR=P(s>t|y=0)\]
+
+In order to compare the ROC curve of different models, we use the area under the
+curve (AUC) as a measure of performance.
+
+\[\AUC=\int_{-\infty}^{+\infty}F_1(s)f_0(s)ds\]
+
+AUC is very often used in churn prediction \parencite{coussement2017comparative,
+mitrovic2018operational} because it is less sensitive to class imbalance (few
+churners in a large population of customers) and misclassification cost
+\parencite{verbeke2012new}.
+
+An important drawback of these performance measures is that they do not
+represent the real objective of churn prediction: given that we are
+certainly not able to offer an incentive to all customers likely to
+churn, we have to restrict the retention campaign to a limited number of
+customers. From that, we wish to minimize the number of misclassifications
+occurring in this small subset of customers. This is the definition of the lift:
+given a certain set of customers (usually the subset of the customers with the
+highest predicted probability of churn), the lift is the ratio between the churn
+rate in this set and the churn rate in the whole customer base.
+
+\[\lift(t) = \frac{P(y=1|s>t)}{P(y=1)}\]
+
+The value of the lift indicates how much we do better than choosing customers at
+random. For example, a lift of 3 indicates that the model will give a set of
+customers with 3 times as much churners as if we picked that many customers at
+random. The number of customers to consider is dependent on the application (it
+should ideally be the number of customers reachable by the retention campaign),
+but a lift at 10\% is sometimes used as a baseline \parencite{zhu2017empirical,
+verbeke2014social}.
+
+In order to determine formally how many customers should be included in the
+retention campaign, and therefore in the lift measure, \textcite{verbeke2012new}
+developed the maximum profit criterion (MPC) and the expected maximum profit
+criterion (EMPC) \parencite{verbeke2012new, verbraken2013novel}. These two
+measures consist of evaluating the expected costs and benefits of conducting a
+retention campaign and selecting the optimal number of customers to call. The
+difference between MPC and EMPC is that MPC considers the cost and benefits to
+be known and fixed, while EMPC assigns a probability density function to these
+parameters. MPC and EMPC are often used in churn prediction
+\parencite{zhu2017empirical, oskarsdottir2018time, stripling2018profit}.
+
+\section{Causal analysis}
+\label{sec:sota_caus}
+
+Finding and using causes is crucial in human reasoning and decision making.
+While a predictive model returns the probability of a target value given that we
+observe a certain input vector, a causal model is supposed to return the target
+probability given that we set (e.g. by intervention) that input. The aim of
+causal analysis is to determine the consequences of manipulations and is opposed
+to the process of making predictions from observations. When used as a feature
+selection criterion, it enables increased robustness to violation of the iid
+assumption (e.g. concept drift) \parencite{guyon2007causal} and an enhanced
+understanding of the mechanism underlying the data. The gold standard for causal
+modeling is to carry out  \emph{randomized controlled experiments}
+\parencite{fisher1937design}. For example, in order to assess the influence of
+moderate wine consumption on heart disease, it is not enough to measure wine
+consumption and heart disease in the population. This may lead to erroneous
+conclusions, such as a socio-economic factor that causes both increased wine
+consumption and risks of heart disease. In order to avoid such a problem, one
+may assign to a randomly chosen group of people a moderate wine consumption. If
+this group then shows a significantly different risk of heart disease, then we
+may conclude that a causal relationship indeed exists, and the apparent
+correlation is not due to a confounding factor. However, such experiments may be
+expensive, unethical, difficult to implement or unfeasible. This, along with
+advances in computation, data storage capabilities and new machine learning
+techniques, led to the development of causal inference based on observational
+data. We review here 5 approaches to data-driven causal inference:
+
+\begin{itemize}
+    \item Bayesian network learning
+    \item Markov blanket inference
+    \item Information-theoretic filters
+    \item Bivariate methods
+    \item Supervised methods
+\end{itemize}
+
+All the approaches model causal relationships between random variables. These
+random variables represent, for example, the different features available about
+a customer in the churn prevention problem.
+
+\paragraph{Bayesian network learning} A causal Bayesian network is a discrete
+acyclic graph where the set of nodes correspond to the set of random variables,
+and a directed link indicates a causal relationship between two variables. This
+graph is also accompanied by the joint probability distribution of the set of
+random variables. Two conditions are usually imposed on the graph and the
+probability distribution (the causal Markov condition and the causal
+faithfulness condition) to ensure that it respects the semantics of a causal
+model. Notably, these conditions also allow predicting the effect of a
+manipulation \parencite{spirtes2010introduction}. Causal Bayesian network can be
+learned from observational data, and two types of procedures have been developed
+for that purpose. The first one consists in a search in the graph structure
+space, and optimization a fitness function. This approach is detailed in
+\parencite{heckerman1998tutorial}. The second one is based on independence tests
+between pairs of variables, and iteratively construct and orient edges until a
+valid class of causal graphs is found. The PC and FCI algorithms use this
+approach (Shafer 1995).
+
+\paragraph{Markov blanket inference} The Markov blanket of a given target
+variable in a Bayesian network is a minimal set of variables that are shielding
+the target variable from the influence of other variables in the network. A
+formal definition is given in \parencite{guyon2007causal}. This subset of
+variables contains all the information needed to predict the target variable
+(that is, any additional variable would be redundant). Moreover, if the causal
+Markov and faithfulness assumptions hold, then this Markov blanket is the set of
+direct causes (parents), direct effect (children), and also the direct causes of
+the direct effects (spouses). Inferring the Markov blanket of a variable, as
+opposed to inferring the complete Bayesian network, is beneficial when the
+number of variables is large, such as in microarray data. Several algorithms
+exist for Markov blanket inference, notably KS \parencite{koller1996towards},
+GS \parencite{margaritis2000bayesian} IAMB \parencite{tsamardinos2003time},
+HITON \parencite{aliferis2003hiton}, and MMPB \parencite{tsamardinos2003time}.
+These algorithms start with an empty Markov blanket, and search for parents,
+children, and spouses of the target variable by using conditional independence
+tests. A number of heuristics are used to speed up the search, and most of these
+algorithms also include a second phase where false positives are removed from
+the result.
+
+\paragraph{Information-theoretic filters} Usual filter variable selection
+methods, based on a variable ranking, suffer from several drawbacks. For
+example, multiple variables may all provide the same information about the
+target (the extreme case occurring when a variable is actually a copy of
+another). In a univariate ranking approach, all of these variables would be
+included in the result, even though one is sufficient. Another typical problem
+occurs when two or more variables are not very predictive when taken
+individually, but on the contrary are predictive once used conjointly. These
+notions can be formalized using information theory, and information-theoretic
+filters are designed to avoid the exposed pitfalls. Another advantage of such
+filters is that they do not make any assumption about the statistical
+distribution on the variables, thanks to the use of mutual information as a
+dependency measure. State-of-the-art information-theoretic filters include mRMR
+\parencite{peng2005feature}, DISR \parencite{meyer2008information}, REL
+\parencite{bell2000formalism}, CMIM \parencite{fleuret2004fast} and FCBF
+\parencite{yu2004efficient}. These algorithms vary on whether or not they take
+complementarity into account, if they avoid the estimation of multivariate
+density and if they return a ranking of the variable (as opposed to an unordered
+set of relevant variables). These filters can also be designed to explicitly
+favor variables having a direct causal influence on the target, thanks to
+dependence relationships uniquely exhibited by children, spouses and parents of
+the target. This is the case of the mIMR \parencite{bontempi2010causal} and the
+MIMO \parencite{bontempi2011multiple} filters.
+
+\paragraph{Bivariate methods} In the last decade, there is an increased interest
+in telling cause from effect from observational data on just two variables. This
+task is based on asymmetric properties of the joint distribution of the two
+variables, and because of the limited number of possible causal configurations,
+usual classification metrics can be used to assess the performance of inference
+methods. Moreover, the nature of the problem allows using classical machine
+learning algorithms for cause/effect classification. This approach gained
+interest through the organization of public a public challenge on Kaggle
+(\url{https://www.kaggle.com/c/cause-effect-pairs}). This competition resulted
+in several novel solutions for cause-effect detection, and a general advance in
+the state of the art. The winner of the challenge, the team \emph{ProtoML},
+extracts a large number of features from the variable distributions, and uses a
+large number of models for classification. The second-ranked participant,
+\emph{jarfo} \cite{fonollosa2016conditional}, uses conditional distributions and
+other information-theoretic quantities to infer features that are used for
+prediction. The general outcome of this challenge is that asymmetries in causal
+patterns enable the development of bivariate causal distinguishers, with an
+accuracy significantly better than random.
+
+\paragraph{Supervised methods} In the context of the aforementioned cause-effect
+pair competition, \textcite{bontempi2015dependency} proposed
+an algorithm using asymmetries in the conditional distributions of the
+variables. They extended their method to a setting with more than two variables,
+by also extracting distribution features from other variables and using them to
+infer the existence and direction of a causal link in the two initial variables.
+This benefit is striking in the case of a collider configuration $x_1 \to x_2
+\to x_3$: in this case, the dependency (or independence) between $x_1$ and
+$x_3$ tells us more about the link $x_1 \to x_2$ than the dependency between
+$x_1$ and $x_2$. By using a learning machine such as random forest, these
+features can be used to successfully infer causal links, competing with and
+often outperforming state-of-the-art Bayesian network inference methods.
