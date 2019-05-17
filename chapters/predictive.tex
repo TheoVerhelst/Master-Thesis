@@ -8,13 +8,12 @@ The data used throughout this work is a monthly summary of customers' activity,
 including mobile data usage, calls, and messages, along with information about
 the type of subscription, hardware, and socio-demographic information, for a
 total of 73 variables. The dataset comprises one entry per customer and per
-month, and a total of 5 months are present, from June 2018 to October 2018.
-About 1.5 million entries are present per month, for a total of about 7.6
-million entries in the entire dataset. Also, in this dataset only private
-individuals having a non-zero usage of mobile data are present, this therefore
-does not represent the entire customer base of Orange Belgium. The target
-variable, churn, is represented as a date if the client is known to have
-churned, or an empty value otherwise.
+month, and a total of 5 months are present from the year 2018. About 1.5 million
+entries are present per month, for a total of about 7.6 million entries in the
+entire dataset. Also, in this dataset only private individuals having a non-zero
+usage of mobile data are present, this therefore does not represent the entire
+customer base of Orange Belgium. The target variable, churn, is represented as a
+date if the client is known to have churned, or an empty value otherwise.
 
 Are present in this dataset two kinds of contracts, that we will call \emph{SIM
 only} and \emph{loyalty}. The first type refers to a subscription where the
@@ -40,19 +39,6 @@ almost non-existent, due to the remaining discount to be paid back by the
 customer. We consider a time frame of 2 months, explaining the low number of
 data entries under consideration.
 
-The 73 variables are grouped into 6 categories:
-\noprelistbreak
-\begin{itemize}
-    \item Subscription (17 variables)
-    \item Calls and messages (11 variables)
-    \item Mobile data usage (16 variables)
-    \item Revenue (14 variables)
-    \item Customer hardware (6 variables)
-    \item Socio-demographic (5 variables)
-\end{itemize}
-The 4 remaining variables are the churn date, the timestamp of the data entry and
-two customer identifier columns.
-
 Due to commercial reasons, a non-disclosure agreement prevents us from
 communicating precise details on the variables being used or the rate of churn
 in the customer base of Orange. The churn prediction problem is highly
@@ -62,6 +48,21 @@ corresponding to one of the 6 aforementioned categories and a number to
 differentiate variables among a category. We are able to disclose the exact name
 of a variable when its meaning is relevant for the discussion and its disclosure
 would not have a negative impact on confidentiality.
+
+The 73 variables are grouped into 6 categories. We denote each variable by a
+letter corresponding to its category, and a number to differentiate it from
+others in the same category. The different categories are
+
+\begin{itemize}
+    \item Subscription (17 variables, initial S)
+    \item Calls and messages (11 variables, initial C)
+    \item Mobile data usage (16 variables, initial U)
+    \item Revenue (14 variables, initial R)
+    \item Customer hardware (6 variables, initial H)
+    \item Socio-demographic (5 variables, initial D)
+\end{itemize}
+The 4 remaining variables are the churn date, the timestamp of the data entry and
+two customer identifier columns.
 
 Most variables are continuous, such as the duration of phone calls, or the
 amount paid on the last bill. There are however a few discrete variables, either

@@ -9,20 +9,22 @@ explored, in the hope of shedding light on the reasons for customer churn. A
 predictive experiment as conducted in the previous chapter indicates which
 variables are indicative of a client about to churn, but there is no guarantee
 that an intervention on any of these variables will have a positive effect. For
-example, the number of phone calls has a strong predictive power as shown in
-figure \ref{fig:var_imp_simo_decrease_accuracy}. However, a hypothetical churn
-retention action that would make customers call less often will maybe fail, if
-clients about to churn tend to call less because they are unsatisfied of the
-service. In this case, the predictive variable is an effect of churn and
-modifying it has no causal impact. Different tools are needed to discover true
-causal relationships between variables. In this chapter, we focus on three types
-of models: causal Bayesian networks, information-theoretic filters, and
+example, the number of contracts registered by a customer has a strong
+predictive power as shown in figure
+\ref{fig:var_imp_simo_diff_decrease_accuracy}. However, a hypothetical churn
+retention action that would sell additional contracts will maybe fail, if
+satisfied clients are more prone to buy new contracts but not dissatisfied ones.
+In this case, the predictive variable  (number of contracts) and the churn have
+a common cause (customer satisfaction). Manipulating the number of contracts
+will therefore have no effect on churn. Different tools are needed to discover
+true causal relationships between variables. In this chapter, we focus on three
+types of models: causal Bayesian networks, information-theoretic filters, and
 supervised causal inference. An overview of state-of-the-art methods for each of
 these models is given in section \ref{sec:sota_caus}, but we describe them here
 in more details.
 
-We begin by introducing \emph{Bayesian networks}, which are graphical models used
-to represent probabilistic dependencies between random variables. They are
+We begin by introducing \emph{Bayesian networks}, which are graphical models
+used to represent probabilistic dependencies between random variables. They are
 represented by a \emph{directed acyclic graph} (DAG) where the nodes are random
 variables, and a joint probability density is assigned to these variables. We
 will use the terms \emph{nodes} and \emph{variable} interchangeably. In a
@@ -280,17 +282,91 @@ purposes.
 
 \section{Scope}
 
-In this section, the same dataset as in the predictive modeling part is used. We
-restrict ourselves to SIM only contracts since it is supposed that the causes
+In this chapter, the same dataset as in the predictive modeling chapter is used.
+We restrict ourselves to SIM only contracts since it is supposed that the causes
 of churn are at least partially different between loyalty and SIM only
 contracts. All 5 months of data are used. In order to decrease computation time,
 only the first 30 variables in the ranking of the random forest trained in
 chapter \ref{ch:churn} are used. Depending on the algorithm being used, a random
-subsampling has been applied, also to achieve decent computation times. In all
+subsampling has been applied, also to reach decent computation times. In all
 cases, the positive class (churners) is untouched, and a random subset of the
 negative class is sampled so that the class ratio is even.
 
-\section{Prior knowledge on causes of churn}
+\section{Prior knowledge on churn}
+\label{sec:causal_prior}
+
+Bayesian reasoning indicates that we should always take into account our prior
+knowledge on a problem when considering the outcome of an experiment designed to
+test some hypotheses on this problem. An unlikely theory according to our priors
+needs strong evidence to be proven true. Ideally, we should assign a probability
+(in the Bayesian sense, that is, a degree of belief) to every theory, and
+calculate the probability of the experiment results according to each theory. We
+will obviously not conduct this procedure formally in the context of this study,
+but the Bayesian methodology is nonetheless useful to keep in mind when
+interpreting the results of the causal inference experiments. This section
+describes the prior knowledge we have on the causes of churn. It is the result
+of discussions and interviews with the data science and business intelligence
+teams at Orange Belgium. This prior knowledge is highly valuable, since it
+incorporates years of experience in churn prevention and customer relationship
+in general. We summarize the main causes of churn in four different settings.
+
+\paragraph{Bill shock} This setting has been already evoked multiple times in
+chapter \ref{ch:churn}. It occurs when a customer has an unusually large
+service usage, which results in an important out of bundle amount (i.e. the
+client is charged much more than usual). This triggers a reaction from the
+customer inducing an increased risk of churn. This scenario is well understood
+and verified in practice. It is believed to be the most important cause of
+churn.
+
+\paragraph{Customer dissatisfaction} Multiple factors influence the customer
+satisfaction, including the quality of service and the network quality. A
+customer having numerous cuts of network connection during phone calls, or
+unable to use properly Orange online services, will be more likely to seek
+better alternatives elsewhere.
+
+\paragraph{Wrong positioning} Each customer has different service usage habits.
+Some people make a few minutes of phone calls per month, whereas this can be
+counted in hour for others. This is why multiple tariff plan are proposed by the
+service provider. However, choosing the right tariff plan is sometimes
+difficult. On the one hand, if not enough call time is provisioned, an out of
+bundle amount is likely to be charged at the end of the month. On the other
+hand, an expensive tariff plan results in a high fixed cost for the customer.
+When the tariff plan of the customer does not correspond to her needs, we say
+that the customer is wrongly positioned. A wrong positionnement results in most
+cases to a higher bill that expected, and is a significant cause of churn.
+
+\paragraph{Churn due to a move} It is common to choose a product bundle from a
+telecommunication company comprising a subscription for mobile phone, landline
+phone, television and internet connection. In this case, the subscription is
+tied to the particular place of domicile of the customer. When the client moves
+to another place, it is quite common to also change to another telecommunication
+provider. This is therefore a significant cause of churn, albeit of a different
+nature from the other settings previously exposed.
+
+
+\paragraph{} These different settings are described informally, and their
+translation to the formal definitions of causality presented in section
+\ref{sec:causal_intro} is not straightforward. This touches upon philosophical
+debates on the definition of causality, which are well beyond the scope of this
+thesis. More practically, we wish to find a mapping between the events believed
+to be causes of churn, and specific instanciations of measurable random
+variables. In the case of the first setting, we can reasonably assume that
+variables measuring the out of bundle amount of the customer is a faithful proxy
+for bill shock.  Similarly, the customer satisfaction can be estimated using,
+for example, the number of network cuts during phone calls, or the number of
+calls to the customer service. The wrong positioning can also be numerically
+estimated, given the tariff plan of the client and its average service usage.
+The last setting, churn due to a move, is much more difficult to estimate, as it
+is not directly related to the interaction between the client and the
+telecommunication services.
+
+In the dataset available for this study, the only measured variables that
+translate to potential causes of churn are the ouf of bundle, the tariff plan
+and the service usage (phone calls, messages, mobile data). We have no measure
+for network quality, customer satisfaction, or propensity to move in the near
+future. Also, the wrong positioning is not explicitly encoded and has to be
+inferred by the causal inference model from the average service usage and the
+current tariff plan.
 
 \section{Experiments}
 \label{sec:causal_experiments}
@@ -979,38 +1055,64 @@ tariff plan are causes of churn are thus consistent with the observations.
         & PC & GS & IAMB & mIMR 1 & mIMR 2 & D2C \\
         \midrule
         Tenure               & \nok & \ok  & \nok & \ok  & \ok  & \nok \\
+        H14                  & \nok & \ok  & \nok & \ok  & \ok  & \nok \\
+        D13                  & \nok & \ok  & \nok & \ok  & \ok  & \nok \\
+        Data usage           & \nok & \ok  & \nok & \ok  & \nok & \ok  \\
         Tariff plan          & \nok & \nok & \ok  & \ok  & \nok & \ok  \\
         Prev tariff plan     & \nok & \nok & \ok  & \ok  & \nok & \ok  \\
+        Out of bundle        & \nok & \ok  & \nok & \nok & \ok  & \nok \\
         Number contracts     & \nok & \ok  & \nok & \nok & \ok  & \nok \\
+        S7                   & \nok & \ok  & \nok & \ok  & \nok & \nok \\
+        H8                   & \nok & \nok & \nok & \ok  & \nok & \ok  \\
         Province             & \nok & \nok & \nok & \ok  & \nok & \ok  \\
         Age                  & \nok & \nok & \nok & \nok & \ok  & \nok \\
-        Messages             & \nok & \ok  & \nok & \nok & \nok & \nok \\
-        Data usage           & \nok & \ok  & \nok & \ok  & \nok & \ok  \\
-        Voice calls          & \nok & \ok  & \nok & \nok & \nok & \nok \\
-        Out of bundle        & \nok & \ok  & \nok & \nok & \ok  & \nok \\
-        H8                   & \nok & \nok & \nok & \ok  & \nok & \ok  \\
-        H14                  & \nok & \ok  & \nok & \ok  & \ok  & \nok \\
-        S7                   & \nok & \ok  & \nok & \ok  & \nok & \nok \\
-        D13                  & \nok & \ok  & \nok & \ok  & \ok  & \nok \\
         R14                  & \nok & \nok & \nok & \nok & \ok  & \nok \\
+        Messages             & \nok & \ok  & \nok & \nok & \nok & \nok \\
+        Voice calls          & \nok & \ok  & \nok & \nok & \nok & \nok \\
         \bottomrule
     \end{tabularx}
     \caption{Summary of the results of causal analysis.}
     \label{tab:causal_summary}
 \end{table}
 
-In the absence of a formal procedure to assess these results, we could
-informally find arguments for or against considering each variable a cause of
-churn. This is due to the different assumptions laid by each method and the
-variety of their outputs. We will thus summarize the results of causal inference
-from observational data to the following statements:
+In the absence of a formal procedure to assess these results, we could we will
+summarize the results of causal inference from observational data to the
+following statements:
 
 \begin{itemize}
     \item The  messages, the voice calls, as well as all variables not
     represented in table \ref{tab:causal_summary}, are considered as most
-    probably \emph{not causes of churn}.
+    probably \emph{not inferred causes of churn}.
     \item The tariff plan and previous tariff plan are considered as most
-    probably \emph{causes of churn}.
-    \item The causal relationship of other variables in the table
+    probably \emph{inferred causes of churn}.
+    \item The inferred causal relationship of other variables in the table
     \ref{tab:causal_summary} is undecided.
 \end{itemize}
+
+In the light of our prior knowledge on the causes of churn exposed in section
+\ref{sec:causal_prior}, we would expect the out of bundle variable to stand out
+more explicitly, but it is only given by mIMR with Gaussian assumption. However,
+recall that the distribution of the out of bundle can roughly be modeled as the
+exponential of a Gaussian (see figure \ref{fig:oob}). It is thus easy to
+understand why the other inference methods fail to report the causal link to the
+churn expected by our priors, due to the different estimators of mutual
+information. If it is true that the bill shock is a true cause of churn, then
+the results we observe on table \ref{tab:causal_summary} are not extraordinary.
+In other words, the credence in this theory is slightly, but not significantly,
+undermined.
+
+Two of the other causes of churn according to our prior knowledge are customer
+satisfaction and churn due to a move. As explained in section
+\ref{sec:causal_prior}, none of the measured variables are direct proxies for
+these two putative explanations of churn. The interaction of variables present
+in table \ref{tab:causal_summary} might be the most direct display of the
+missing causal proxies. This would also explain the presence of variables
+seemingly unrelated to our prior knowledge. However, this hypothesis is somewhat
+far-fetched, and conforming to the faithfulness assumption by engineering
+relevant variables would be much more precise and productive.
+
+The last of the four expected causes of churn correspond to a wrong positioning
+of the customer's tariff plan. This cause is supported by the results in a more
+obvious way. The tariff plan and previous tariff plan are reported as causes of
+churn by D2C and mIMR, and is also considered part of the Markov blanket by
+IAMB. This indicates that the wrong positioning theory is not unlikely.

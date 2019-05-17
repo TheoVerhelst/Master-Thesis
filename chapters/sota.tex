@@ -8,24 +8,95 @@ considering 4 aspects of interest in a usual churn prediction process: learning
 algorithm, data preprocessing, class balancing and choice of an evaluation
 measure.
 
-\paragraph{Learning algorithm} A large number of machine learning models have
-been applied to churn prediction in the literature. While some studies focus on
-simple and interpretable models \parencite{keramati2014improved,
-dahiya2015customer}, other studies prefer the use of more complex models, at the
-expense of direct interpretation. These methods include boosting applied on
-simple classifiers \parencite{vafeiadis2015comparison}, random forests, support
-vector machine, gradient boosting, among others
-\parencite{umayaparvathi2016attribute, verbeke2012new}. An extensive overview of
-the current trends in churn prediction models is given in
-\parencite{kayaalp2017review}.
+\subsection{Learning algorithm}
 
-\paragraph{Data preprocessing} While the choice of model is important, it is
-equally important to consider a proper choice of features, data preprocessing
-and evaluation measure. Feature choice is limited by the available data
-infrastructure and usually consists of call detail records on the course of a
-few weeks. (Huang 2012) presented however how new kinds of features, including
-demographics profiles, marketing segments, and complaint information, can improve
-prediction accuracy.
+A large number of machine learning models have been applied to churn prediction
+in the literature. While some studies focus on simple and interpretable models
+such as decision tree \parencite{keramati2014improved} or logistic regression
+\parencite{olle2014hybrid}, other studies prefer the use of more complex models,
+at the expense of direct interpretation. These methods include boosting applied
+on simple classifiers \parencite{vafeiadis2015comparison}, random forests,
+support vector machine, neural networks, among others
+\parencite{umayaparvathi2016attribute, verbeke2012new}. An extensive overview of
+the current trends in churn prediction modeling is given in
+\parencite{kayaalp2017review}. We describe in this section the learning
+algorithms used most often according to this review.
+
+A decision tree is a non-linear model that partitions the input space into
+mutually exclusive regions, and each of these regions is assigned a mapping
+between the input vector and the output value. In the case of a classification
+tree, each region is assigned a label. The partition of the input space is
+determined by a tree structure composed of internal nodes and terminal nodes.
+Each internal node is associated to a rule that determines which child node
+should be visited next, based on the value of one of the variables. Each of the
+terminal nodes is associated to a mapping function,  a label in the case of a
+classification tree. The main methods of decision tree inductions are ID3
+\parencite{quinlan1986induction}, C4 \parencite{quinlan1987simplifying}, and
+CART \parencite{breiman1984classification}.
+
+Logistic regression is a statistical binary classification model that assigns a
+probability to each point of the input space. The probability of an input vector
+$\bm x$ is calculated as the application of the sigmoid function on a linear
+combination of the values in $\bm x$. More precisely, to each variable $X_i$ is
+assigned a coefficient $w_i$, and an intercept coefficient $w_0$ is also
+defined. The predicted probability of a logistic regression model is thus
+
+\begin{equation*}
+    s(\bm x) = \frac{1}{1+\exp{(-(w_0 + w_1x_1 + \dots + w_nx_n))}}.
+\end{equation*}
+
+The weights $w_0,\dots,w_n$ can be learned by maximizing their log-likelihood
+given a set of learning examples using the gradient descent algorithm.
+
+Artificial neural networks are computational models that process input in a
+distributed, parallel fashion. They are initially inspired from biological
+neurons, but their current development has moved towards a more rigorous
+interpretation based on theoretical machine learning. A wide variety of neural
+network architectures exists, but we present here only \emph{feed-forward neural
+networks} (FNN) for their prominent use in the churn prediction literature. A
+MLP consists of a series of layers, and each layer comprises multiple neurons.
+In the fully connected configuration, a neurons takes as input all outputs from
+the previous layer. The output of the neuron is the result of applying an
+non-linear activation function to the dot product of the inputs with a vector of
+weights. Many  activation functions exists, such as the sigmoid function, the
+rectified linear unit \parencite{nair2010rectified}, the hyperbolic tangent, and
+many others \parencite{cheng1994neural}. The weights of each inter-neuron link
+are learned by gradient descent on a loss function given training samples. The
+exact learning setup can vary widely, thanks to the numerous possibilities in
+the choice of the loss function and the gradient descent implementation.
+
+A support vector machine (SVM) is a geometrical classification model based on
+the notion of \emph{maximum margin hyperplane}. A SVM model splits the input
+space into two separate regions by using a hyperplane. This hyperplane is chosen
+as to maximize its distance to the nearest data point in either classes. In
+order to handle arbitrary input space or non-separable classes, a kernel
+function is used to project the input space into a well-known Hillbert space.
+Also, slack variables can be introduced to relax the strict requirement that the
+margin should perfectly separate the two classes. The geometrical formulation of
+this model enables an exact optimization procedure based on the dual of the
+Lagrangian. One of the first modern formulation of the SVM model is given in
+\parencite{boser1992training}.
+
+A random forest is an ensemble model composed of multiple decision trees. One of
+the first descriptions of this model is given in \textcite{breiman2001random}.
+Each tree is constructed from a subset of samples and using only a subset of the
+variables. In the case of a classification task, each of the individual trees
+vote for the output label of a given data example, whereas in the case of a
+regression task, the output is the average prediction of all trees. The
+intuition is to obtain a set of low-variance predictors having uncorrelated
+bias, in order for these bias errors to cancel out by averaging. The low bias of
+the random forest is therefore guaranteed as long as the sampling applied to
+each individual tree is independent from other trees.
+
+
+\subsection{Data preprocessing}
+
+While the choice of model is important, it is equally important to consider a
+proper choice of features, data preprocessing and evaluation measure. Feature
+choice is limited by the available data infrastructure and usually consists of
+call detail records on the course of a few weeks. \textcite{huang2012customer}
+presented however how new kinds of features, including demographics profiles,
+marketing segments, and complaint information, can improve prediction accuracy.
 
 Data preprocessing refers to the process following data acquisition and
 consists of modifying the data in various ways before the use in a predictive
@@ -68,25 +139,29 @@ state-of-the-art time series classifiers and non-time-based models for early
 churn prediction. However, static random forest and logistic regression are
 better at predicting late churn (that is, on short time scales).
 
-\paragraph{Class balancing} It is important to consider class imbalance when
-designing models for churn prediction. Indeed, the number of churners is usually
-very low compared to the total number of customers, and most machine learning
-models are usually not suited to handle highly imbalanced data
-\parencite{batista2004study}. Class balancing techniques have to be used to
-tackle this problem. These techniques can roughly be divided into two
-categories: data-level balancing and model-level balancing. Data-level balancing
-consists in modifying the dataset by either decreasing the number of majority
-instances, increasing the number of minority instances, or both. Model-level
-balancing consists in modifying the learning algorithm in such a way that
-minority instances are given more importance, often through the use of
-asymmetric misclassification costs \parencite{zhu2017empirical}.
+\subsection{Class balancing}
 
-\paragraph{Evaluation measure} The last step of a predictive model assessment is
-the evaluation of classification performance. Several performance measures exist
-for this purpose, such as precision, recall, F-score, area under the receiver
-operating characteristic curve (AUC), lift, maximum profit criterion, and
-expected maximum profit criterion. We briefly explain here these measures and
-their current use in the literature.
+It is important to consider class imbalance when designing models for churn
+prediction. Indeed, the number of churners is usually very low compared to the
+total number of customers, and most machine learning models are usually not
+suited to handle highly imbalanced data \parencite{batista2004study}. Class
+balancing techniques have to be used to tackle this problem. These techniques
+can roughly be divided into two categories: data-level balancing and model-level
+balancing. Data-level balancing consists in modifying the dataset by either
+decreasing the number of majority instances, increasing the number of minority
+instances, or both. Model-level balancing consists in modifying the learning
+algorithm in such a way that minority instances are given more importance, often
+through the use of asymmetric misclassification costs
+\parencite{zhu2017empirical}.
+
+\subsection{Evaluation measure}
+
+The last step of a predictive model assessment is the evaluation of
+classification performance. Several performance measures exist for this purpose,
+such as precision, recall, F-score, area under the receiver operating
+characteristic curve (AUC), lift, maximum profit criterion, and expected maximum
+profit criterion. We briefly explain here these measures and their current use
+in the literature.
 
 Precision is the fraction of true churners among all those we predicted to be
 churners, and recall is the fraction of predicted churners among all the true
@@ -194,7 +269,9 @@ All the approaches model causal relationships between random variables. These
 random variables represent, for example, the different features available about
 a customer in the churn prevention problem.
 
-\paragraph{Bayesian network learning} A causal Bayesian network is a discrete
+\subsection{Bayesian network learning}
+
+A causal Bayesian network is a discrete
 acyclic graph where the set of nodes correspond to the set of random variables,
 and a directed link indicates a causal relationship between two variables. This
 graph is also accompanied by the joint probability distribution of the set of
@@ -211,58 +288,63 @@ between pairs of variables, and iteratively construct and orient edges until a
 valid class of causal graphs is found. The PC and FCI algorithms use this
 approach (Shafer 1995).
 
-\paragraph{Markov blanket inference} The Markov blanket of a given target
-variable in a Bayesian network is a minimal set of variables that are shielding
-the target variable from the influence of other variables in the network. A
-formal definition is given in \parencite{guyon2007causal}. This subset of
-variables contains all the information needed to predict the target variable
-(that is, any additional variable would be redundant). Moreover, if the causal
-Markov and faithfulness assumptions hold, then this Markov blanket is the set of
-direct causes (parents), direct effect (children), and also the direct causes of
-the direct effects (spouses). Inferring the Markov blanket of a variable, as
-opposed to inferring the complete Bayesian network, is beneficial when the
-number of variables is large, such as in microarray data. Several algorithms
-exist for Markov blanket inference, notably KS \parencite{koller1996towards},
-GS \parencite{margaritis2000bayesian} IAMB \parencite{tsamardinos2003time},
-HITON \parencite{aliferis2003hiton}, and MMPB \parencite{tsamardinos2003time}.
-These algorithms start with an empty Markov blanket, and search for parents,
-children, and spouses of the target variable by using conditional independence
-tests. A number of heuristics are used to speed up the search, and most of these
-algorithms also include a second phase where false positives are removed from
-the result.
+\subsection{Markov blanket inference}
 
-\paragraph{Information-theoretic filters} Usual filter variable selection
-methods, based on a variable ranking, suffer from several drawbacks. For
-example, multiple variables may all provide the same information about the
-target (the extreme case occurring when a variable is actually a copy of
-another). In a univariate ranking approach, all of these variables would be
-included in the result, even though one is sufficient. Another typical problem
-occurs when two or more variables are not very predictive when taken
-individually, but on the contrary are predictive once used conjointly. These
-notions can be formalized using information theory, and information-theoretic
-filters are designed to avoid the exposed pitfalls. Another advantage of such
-filters is that they do not make any assumption about the statistical
-distribution on the variables, thanks to the use of mutual information as a
-dependency measure. State-of-the-art information-theoretic filters include mRMR
-\parencite{peng2005feature}, DISR \parencite{meyer2008information}, REL
-\parencite{bell2000formalism}, CMIM \parencite{fleuret2004fast} and FCBF
-\parencite{yu2004efficient}. These algorithms vary on whether or not they take
-complementarity into account, if they avoid the estimation of multivariate
-density and if they return a ranking of the variable (as opposed to an unordered
-set of relevant variables). These filters can also be designed to explicitly
-favor variables having a direct causal influence on the target, thanks to
-dependence relationships uniquely exhibited by children, spouses and parents of
-the target. This is the case of the mIMR \parencite{bontempi2010causal} and the
-MIMO \parencite{bontempi2011multiple} filters.
+The Markov blanket of a given target variable in a Bayesian network is a minimal
+set of variables that are shielding the target variable from the influence of
+other variables in the network. A formal definition is given in section
+\ref{sec:causal_intro}. This subset of variables contains all the information
+needed to predict the target variable (that is, any additional variable would be
+redundant). Moreover, if the causal Markov and faithfulness assumptions hold,
+then this Markov blanket is the set of direct causes (parents), direct effect
+(children), and also the direct causes of the direct effects (spouses).
+Inferring the Markov blanket of a variable, as opposed to inferring the complete
+Bayesian network, is beneficial when the number of variables is large, such as
+in microarray data. Several algorithms exist for Markov blanket inference,
+notably KS \parencite{koller1996towards}, GS \parencite{margaritis2000bayesian}
+IAMB \parencite{tsamardinos2003time}, HITON \parencite{aliferis2003hiton}, and
+MMPB \parencite{tsamardinos2003time}. These algorithms start with an empty
+Markov blanket, and search for parents, children, and spouses of the target
+variable by using conditional independence tests. A number of heuristics are
+used to speed up the search, and most of these algorithms also include a second
+phase where false positives are removed from the result.
 
-\paragraph{Bivariate methods} In the last decade, there is an increased interest
-in telling cause from effect from observational data on just two variables. This
-task is based on asymmetric properties of the joint distribution of the two
-variables, and because of the limited number of possible causal configurations,
-usual classification metrics can be used to assess the performance of inference
-methods. Moreover, the nature of the problem allows using classical machine
-learning algorithms for cause/effect classification. This approach gained
-interest through the organization of public a public challenge on Kaggle
+\subsection{Information-theoretic filters}
+
+Usual filter variable selection methods, based on a variable ranking, suffer
+from several drawbacks. For example, multiple variables may all provide the same
+information about the target (the extreme case occurring when a variable is
+actually a copy of another). In a univariate ranking approach, all of these
+variables would be included in the result, even though one is sufficient.
+Another typical problem occurs when two or more variables are not very
+predictive when taken individually, but on the contrary are predictive once used
+conjointly. These notions can be formalized using information theory, and
+information-theoretic filters are designed to avoid the exposed pitfalls.
+Another advantage of such filters is that they do not make any assumption about
+the statistical distribution on the variables, thanks to the use of mutual
+information as a dependency measure. State-of-the-art information-theoretic
+filters include mRMR \parencite{peng2005feature}, DISR
+\parencite{meyer2008information}, REL \parencite{bell2000formalism}, CMIM
+\parencite{fleuret2004fast} and FCBF \parencite{yu2004efficient}. These
+algorithms vary on whether or not they take complementarity into account, if
+they avoid the estimation of multivariate density and if they return a ranking
+of the variable (as opposed to an unordered set of relevant variables). These
+filters can also be designed to explicitly favor variables having a direct
+causal influence on the target, thanks to dependence relationships uniquely
+exhibited by children, spouses and parents of the target. This is the case of
+the mIMR \parencite{bontempi2010causal} and the MIMO
+\parencite{bontempi2011multiple} filters.
+
+\subsection{Bivariate methods}
+
+In the last decade, there is an increased interest in telling cause from effect
+from observational data on just two variables. This task is based on asymmetric
+properties of the joint distribution of the two variables, and because of the
+limited number of possible causal configurations, usual classification metrics
+can be used to assess the performance of inference methods. Moreover, the nature
+of the problem allows using classical machine learning algorithms for
+cause/effect classification. This approach gained interest through the
+organization of public a public challenge on Kaggle
 (\url{https://www.kaggle.com/c/cause-effect-pairs}). This competition resulted
 in several novel solutions for cause-effect detection, and a general advance in
 the state of the art. The winner of the challenge, the team \emph{ProtoML},
@@ -274,15 +356,17 @@ prediction. The general outcome of this challenge is that asymmetries in causal
 patterns enable the development of bivariate causal distinguishers, with an
 accuracy significantly better than random.
 
-\paragraph{Supervised methods} In the context of the aforementioned cause-effect
-pair competition, \textcite{bontempi2015dependency} proposed
-an algorithm using asymmetries in the conditional distributions of the
-variables. They extended their method to a setting with more than two variables,
-by also extracting distribution features from other variables and using them to
-infer the existence and direction of a causal link in the two initial variables.
-This benefit is striking in the case of a collider configuration $x_1 \to x_2
-\to x_3$: in this case, the dependency (or independence) between $x_1$ and
-$x_3$ tells us more about the link $x_1 \to x_2$ than the dependency between
-$x_1$ and $x_2$. By using a learning machine such as random forest, these
-features can be used to successfully infer causal links, competing with and
-often outperforming state-of-the-art Bayesian network inference methods.
+\subsection{Supervised methods}
+
+In the context of the aforementioned cause-effect pair competition,
+\textcite{bontempi2015dependency} proposed an algorithm using asymmetries in the
+conditional distributions of the variables. They extended their method to a
+setting with more than two variables, by also extracting distribution features
+from other variables and using them to infer the existence and direction of a
+causal link in the two initial variables. This benefit is striking in the case
+of a collider configuration $x_1 \to x_2 \to x_3$: in this case, the dependency
+(or independence) between $x_1$ and $x_3$ tells us more about the link $x_1 \to
+x_2$ than the dependency between $x_1$ and $x_2$. By using a learning machine
+such as random forest, these features can be used to successfully infer causal
+links, competing with and often outperforming state-of-the-art Bayesian network
+inference methods.

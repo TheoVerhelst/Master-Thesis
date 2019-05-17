@@ -6,7 +6,7 @@
 In recent years, the number of mobile phone users increased dramatically,
 reaching more than 3 billion users worldwide. The number of mobile phone service
 subscriptions is above the number of residents in several countries, including
-Belgium \parencite{itu2018ict}. Telecommunication companies are evolving in a
+Belgium \parencite{itu2018itu}. Telecommunication companies are evolving in a
 saturated market, where customers are exposed to competitive offers from many
 other companies. \textcite{hadden2007computer} show that attracting new
 customers can be up to six times more expensive than retaining existing ones.
@@ -147,13 +147,13 @@ originated from the long-lasting scientific collaboration between Prof. Gianluca
 Bontempi (ULB Machine Learning Group) and Dr. Olivier Caelen (Orange Belgium).
 This collaboration enables us to work on real-world data, in Orange Belgium
 premises, and with people directly involved in the subject (data science and
-marketing teams at Orange). The churn prediction problem is challenging in many
-regards: the dataset is large (in our case, 1.1 million entries per month, on 6
-months), highly imbalanced (there is very few churners in the whole customer
-base), and highly overlapping (many non-churners exhibit the same behavior as
-churners). It is therefore an interesting subject for a master thesis in machine
-learning, since it requires the use of different state-of-the-art tools for
-overcoming these challenges.
+business intelligence teams at Orange). The churn prediction problem is
+challenging in many regards: the dataset is large (in our case, 1.5 million
+entries per month, on 5 months), highly imbalanced (there is very few churners
+in the whole customer base), and highly overlapping (many non-churners exhibit
+the same behavior as churners). It is therefore an interesting subject for a
+master thesis in machine learning, since it requires the use of different
+state-of-the-art tools for overcoming these challenges.
 
 The interest for causal inference comes from the experience of the Machine
 Learning Group (MLG) in the subject. They mainly applied causal inference onto
@@ -175,8 +175,9 @@ The main contributions of this thesis are
     \item Understanding of the churn prediction problem with a real-world
     dataset from a telecom company (section \ref{sec:churn_data}).
     \item Evaluation of the predictive power of a state-of-the-art churn
-    prediction model, and several variations of the model using different
-    features (section \ref{sec:churn_exp}).
+    prediction model, and the impact of several variations of the model by using
+    different features and different type of subscription contracts (section
+    \ref{sec:churn_exp}).
     \item Study of causal analysis, and its application to churn prediction from
     observational data (section \ref{sec:causal_experiments}).
 \end{itemize}
@@ -222,6 +223,7 @@ This master thesis is partitioned into 5 chapters, presented here.
     \begin{itemize}
         \item Theoretical background for causal inference
         \item Scope of application
+        \item Prior knowledge on the possible causes of churn
         \item Description of the experimental setting
         \item Presentation of the results
         \item Discussion and conclusion

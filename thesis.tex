@@ -1,8 +1,8 @@
-\documentclass[a4paper,11pt]{memoir}
+\documentclass[a4paper,12pt]{memoir}
 
 \usepackage{hyperref}
-\usepackage[margin=3cm, left=3.5cm]{geometry}
-\usepackage[backend=biber, style=apa]{biblatex}
+\usepackage[margin=2.5cm,left=3.5cm]{geometry}
+\usepackage[backend=biber,style=apa]{biblatex}
 \usepackage[french,english]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -20,6 +20,9 @@
 \usepackage{enumerate} % improvement over lists
 \usepackage{pifont} % ticks and cross characters
 \usepackage{subcaption} % sub-figures
+\usepackage{draftwatermark} % well, a draft watermark
+
+\SetWatermarkLightness{0.9} % Greyness of the watermark
 
 \definecolor{themeblue}{RGB}{20, 116, 230}
 \definecolor{darkerblue}{RGB}{5, 71, 149}
@@ -57,8 +60,8 @@
 
 \newcolumntype{Y}{>{\centering\arraybackslash}X} % Centered, equal-width table column
 
-\newcommand{\ok}{\textcolor{green}{\ding{52}}}
-\newcommand{\nok}{\textcolor{red}{\ding{53}}}
+\newcommand{\ok}{\textcolor{green}{\ding{52}}} % Green check mark
+\newcommand{\nok}{\textcolor{red}{\ding{53}}}  % Red cross mark
 
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{shapes}
