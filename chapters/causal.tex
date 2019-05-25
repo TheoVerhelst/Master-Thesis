@@ -29,10 +29,10 @@ represented by a \emph{directed acyclic graph} (DAG) where the nodes are random
 variables, and a joint probability density is assigned to these variables. We
 will use the terms \emph{nodes} and \emph{variable} interchangeably. In a
 directed acyclic graph, a node $A$ is a parent of $B$ if there is a direct edge
-from $A$ to $B$, $A$ is an ancestor of $B$ if there is a direct path from $A$ to
-$B$. We can define in a similar way the notions of child, descendant,
-non-descendant and spouse in a directed acyclic graph. Bayesian networks come in
-a causal variant, which is defined here \parencite{guyon2007causal}.
+from $A$ to $B$, $A$ is an ancestor of $B$ if there is a directed path from $A$
+to $B$. We can define in a similar way the notions of child, descendant, and
+spouse in a directed acyclic graph. Bayesian networks come in a causal variant,
+which is defined here \parencite{guyon2007causal}.
 
 \begin{definition}[Causal Bayesian network]
 
@@ -43,7 +43,12 @@ are $\bm X$. It is required that
     \item for every edge from a node $X\in\bm X$ to a node $Y\in\bm X$, $X$ is a
     direct cause of $Y$, and
     \item for every node $X\in\bm X$, $X$ is probabilistically independent of
-    all its non-descendants, given its parents.
+    all its non-descendants given its parents, according to $P$:
+    \begin{equation}
+        X \perp_P (\bm X \setminus \text{Descendents}(X)) | \text{Parents}(X)
+    \end{equation}
+    where $\text{Descendents}(X)$ is the set of descendent nodes of $X$ and
+    $\text{Parents}(X)$ is the set of parent nodes of $X$.
 \end{enumerate}
 The first condition is required for a Bayesian network to be causal, and the
 second condition is called the Markov condition. The tuple $(\bm X, P, \Gamma)$
@@ -51,13 +56,75 @@ is a causal Bayesian network iff both conditions are satisfied.
 
 \end{definition}
 
-We denote independence between two variables $A$ and $B$ according to the
-probability density $P$ as $A\perp_P B$. Similarly, the conditional independence
-between two variables $A$ and $B$ given a set of variables $\bm C$ is written
-$A\perp_P B|\bm C$. Using the notion of \emph{d-separation} as introduced by
-Pearl (\emph{e.g.} in \cite{pearl2002causality}), we define the conditional
-independence between two variables $A$ and $B$ entailed by the Markov condition
-on a DAG $\Gamma$ as $A\perp_\Gamma B|\bm C$.
+We denote independence between two variables $X$ and $Y$ according to the
+probability density $P$ as $X\perp_P Y$. Similarly, the conditional independence
+between two variables $X$ and $Y$ given a set of variables $\bm Z$ is written
+$X\perp_P Y|\bm Z$.
+
+The notion of d-separation, as introduced by Pearl (\emph{e.g.} in
+\cite{pearl2002causality}), gives a graphical criterion to evaluate the
+conditional dependence between two sets of nodes entailed by the Markov
+property. This notion uses the terms \emph{chain} (a causal pattern of the form
+$X\rightarrow Y\rightarrow Z$), \emph{fork} ($X\leftarrow Y\rightarrow Z$), and
+\emph{collider} ($X\rightarrow Y\leftarrow Z$).
+
+\begin{definition}[d-separation]
+    Let $X$ and $Y$ be two variables in $\bm X$, and $\Pi$ an undirected path
+    between $X$ and $Y$ in the DAG $\Gamma$. The path $\Pi$ is blocked by a set
+    of nodes $\bm Z\subset\bm X\setminus\{X, Y\}$ if either of the two following
+    statements are true:
+    \begin{enumerate}[(i)]
+        \item $\Pi$ contains a chain $I\rightarrow Z\rightarrow J$ or a fork
+        $I\leftarrow Z\rightarrow J$ such that $Z$ is in $\bm Z$
+        \item $\Pi$ does not contain a collider $I\rightarrow Z\leftarrow J$
+        such that $Z$ or any of its descendent nodes are in $\bm Z$
+    \end{enumerate}
+    If all undirected paths $\Pi$ between $X$ and $Y$ are blocked by $\bm Z$,
+    then $\bm Z$ d-separates $X$ and $Y$.
+\end{definition}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{scope}[every node/.style={ellipse,thick,draw}]
+            \node (1) at (0, 0) {Invoice};
+            \node (2) at (0, -1.5) {Churn};
+            \node (3) at (-3.5, 0) {Data usage};
+            \node (4) at (-6.5, 0) {Age};
+            \node (5) at (3, 0) {Location};
+        \end{scope}
+        \begin{scope}[>={Stealth[black]},
+            every edge/.style={draw=black,very thick}]
+                    \path[->] (1) edge node {} (2);
+                    \path[->] (4) edge node {} (3);
+                    \path[->] (3) edge node {} (1);
+                    \path[->] (5) edge node {} (1);
+        \end{scope}
+    \end{tikzpicture}
+    \caption{An example of causal network illustrating the notion of
+    d-separation. Age and invoice are d-separated given data usage, whereas data
+    usage and location are no longer d-separated once we know the invoice amount
+    or the churn variable.}
+    \label{fig:d_sep}
+\end{figure}
+
+Using the notion of \emph{d-separation}, we define the conditional independence
+between two variables $X$ and $Y$ given $\bm Z$ entailed by a graph $\Gamma$ as
+$X\perp_\Gamma Y|\bm Z$. To illustrate this notion, consider the figure
+\ref{fig:d_sep}. In this fictional exemple, the churn is caused solely by the
+amount to pay on the invoice. This invoice is in turn determined by the data
+usage (and indirectly by the age of the customer), and also by the location: a
+customer in a less populated area pays more, because establishing the
+connectivity is more expensive for the operator. In this configuration, the age
+and the invoice are d-separated by the data usage, since knowing the data usage
+of a client removes any information the age may bring about the invoice amount.
+Also, data usage and location are d-separated given the empty set, since there
+is a collider between them. However, if we know the invoice variable, data usage
+and location are no longer d-separated, as the knowledge of the invoice allows
+to \emph{explain away} one variable with the other. If the client has a large
+invoice amount, and is living in a populated area, that must mean that its data
+usage was probably  high. Note that knowing the churn variable instead of the
+invoice would have the same effect, since churn is a direct effect of invoice.
 
 The condition of \emph{faithfulness} is often set onto a causal Bayesian
 network:
@@ -82,7 +149,7 @@ dependencies and independencies. When both conditions are met, we write
 (in)dependence relations without specifying whether it is entailed by $P$ or
 $\Gamma$. The faithfulness condition, in particular, ensures that the influence
 of a cause onto an effect by multiple causal routes does not cancel itself out.
-To demonstrate a violation of this assumption, assumes that a gene codes both
+To demonstrate a violation of this assumption, assume a gene codes both
 for the production of a particular protein and for the suppression of another
 gene that codes this protein as well. In this case, when the first gene is
 removed, the protein is still produced by the other gene, and therefore the
@@ -102,9 +169,9 @@ or in the interaction thereof, of the Markov blanket.
 
 \begin{definition}[Markov blanket]
 
-For a set of random variables $\bm X$, a subset $\bm M\subset\bm X$ and a
+For a set of random variables $\bm X$, a subset $\bm M\subset\bm X$, and a
 variable $Y\in\bm X$, $\bm M$ is the Markov blanket of $Y$ iff for any subset
-$\bm V\subset\bm X$, $Y$ is conditionnally independent of $\bm V\setminus \bm M$
+$\bm V\subset\bm X$, $Y$ is conditionally independent of $\bm V\setminus \bm M$
 given $\bm M$.
 
 \end{definition}
@@ -112,8 +179,8 @@ given $\bm M$.
 In our case, where causal Bayesian networks are represented by a directed
 acyclic graph, and where both the Markov and the faithfulness
 conditions are met, the Markov blanket of a variable is unique and consists of
-its direct causes, its direct effects, and the direct causes of its direct1235711
-effects. An example is given on figure \ref{fig:markov_blanket}.
+its direct causes, its direct effects, and the direct causes of its direct
+effects. An example is given in figure \ref{fig:markov_blanket}.
 
 \begin{figure}
     \centering
@@ -196,7 +263,8 @@ definition exist \parencite{kolmogorov1956shannon}
     \end{tikzpicture}
     \caption{Schematic representation of the relationship between entropy,
     conditional entropy, joint entropy, and mutual information of two discrete
-    random variables.}
+    random variables. The blue circle represents $H(X)$ and the orange circle
+    represents $H(Y)$.}
     \label{fig:mi_schematic}
 \end{figure}
 
@@ -231,10 +299,11 @@ I(X, Y)=h(X) - h(X|Y)=h(X)-\sum_{y\in\mathcal Y}h(X|Y=y)P(Y=y)\label{eq:mi_mixed
 which means that the mutual information in the mixed case can be computed with
 an estimator of the differential entropy of a continuous variable. Following the
 discretization method described in \parencite{olsen2008impact}, let $N$ be the
-number of values sampled iid from $X$. We divide the domain $\mathcal X$ of $X$
-into $k$ bins of equal size $\Delta$, and we write $\text{nb}(i)$ the number of
-samples present in the $i$th bin, $\forall i\in\{1,\dots,k\}$. The differential
-entropy of $X$ is estimated with the \emph{Miller-Madow estimator}
+number of values sampled independently and identically from $X$. We divide the
+domain $\mathcal X$ of $X$ into $k$ bins of equal size $\Delta$, and we write
+$\text{nb}(i)$ the number of samples present in the $i$th bin, $\forall
+i\in\{1,\dots,k\}$. The differential entropy of $X$ is estimated with the
+\emph{Miller-Madow estimator}
 
 \begin{equation}
     \label{eq:mle_ent}
@@ -258,7 +327,9 @@ The mutual information can be generalized for any $n$ variables, and is then
 named $n$-way \emph{interaction} or \emph{co-information}
 \parencite{bell2003co}. A general formula exists, but we are only interested in
 the case $n=3$ since it is connected with causal configurations composed of
-three variables. In this case, the 3-way interaction (that we simply name
+three variables. All causal configurations of three variables can be easily
+enumerated, allowing to develop causal discovery algorithms based solely on the
+3-way interaction. In this case, the 3-way interaction (that we simply name
 interaction) between three random variables $X_1$, $X_2$, and $Y$ is defined in
 \parencite{mcgill1954multivariate} as
 
@@ -292,7 +363,7 @@ subsampling has been applied, also to reach decent computation times. In all
 cases, the positive class (churners) is untouched, and a random subset of the
 negative class is sampled so that the class ratio is even.
 
-\section{Prior knowledge on churn}
+\section{Prior knowledge of churn}
 \label{sec:causal_prior}
 
 Bayesian reasoning indicates that we should always take into account our prior
@@ -306,7 +377,7 @@ but the Bayesian methodology is nonetheless useful to keep in mind when
 interpreting the results of the causal inference experiments. This section
 describes the prior knowledge we have on the causes of churn. It is the result
 of discussions and interviews with the data science and business intelligence
-teams at Orange Belgium. This prior knowledge is highly valuable, since it
+teams at Orange Belgium. This prior knowledge is highly valuable since it
 incorporates years of experience in churn prevention and customer relationship
 in general. We summarize the main causes of churn in four different settings.
 
@@ -318,7 +389,7 @@ customer inducing an increased risk of churn. This scenario is well understood
 and verified in practice. It is believed to be the most important cause of
 churn.
 
-\paragraph{Customer dissatisfaction} Multiple factors influence the customer
+\paragraph{Customer dissatisfaction} Multiple factors influence customer
 satisfaction, including the quality of service and the network quality. A
 customer having numerous cuts of network connection during phone calls, or
 unable to use properly Orange online services, will be more likely to seek
@@ -326,22 +397,22 @@ better alternatives elsewhere.
 
 \paragraph{Wrong positioning} Each customer has different service usage habits.
 Some people make a few minutes of phone calls per month, whereas this can be
-counted in hour for others. This is why multiple tariff plan are proposed by the
+counted in hours for others. This is why multiple tariff plans are proposed by the
 service provider. However, choosing the right tariff plan is sometimes
 difficult. On the one hand, if not enough call time is provisioned, an out of
 bundle amount is likely to be charged at the end of the month. On the other
 hand, an expensive tariff plan results in a high fixed cost for the customer.
 When the tariff plan of the customer does not correspond to her needs, we say
-that the customer is wrongly positioned. A wrong positionnement results in most
+that the customer is wrongly positioned. A wrong positioning results in most
 cases to a higher bill that expected, and is a significant cause of churn.
 
 \paragraph{Churn due to a move} It is common to choose a product bundle from a
 telecommunication company comprising a subscription for mobile phone, landline
-phone, television and internet connection. In this case, the subscription is
+phone, television, and internet connection. In this case, the subscription is
 tied to the particular place of domicile of the customer. When the client moves
-to another place, it is quite common to also change to another telecommunication
-provider. This is therefore a significant cause of churn, albeit of a different
-nature from the other settings previously exposed.
+to another place, it is quite common to also change for another
+telecommunication service provider. Therefore, this is a significant cause of
+churn, albeit of a different nature from the other settings exposed above.
 
 
 \paragraph{} These different settings are described informally, and their
@@ -349,10 +420,10 @@ translation to the formal definitions of causality presented in section
 \ref{sec:causal_intro} is not straightforward. This touches upon philosophical
 debates on the definition of causality, which are well beyond the scope of this
 thesis. More practically, we wish to find a mapping between the events believed
-to be causes of churn, and specific instanciations of measurable random
+to be causes of churn and specific instantiations of measurable random
 variables. In the case of the first setting, we can reasonably assume that
 variables measuring the out of bundle amount of the customer is a faithful proxy
-for bill shock.  Similarly, the customer satisfaction can be estimated using,
+for bill shock.  Similarly, customer satisfaction can be estimated using,
 for example, the number of network cuts during phone calls, or the number of
 calls to the customer service. The wrong positioning can also be numerically
 estimated, given the tariff plan of the client and its average service usage.
@@ -361,8 +432,8 @@ is not directly related to the interaction between the client and the
 telecommunication services.
 
 In the dataset available for this study, the only measured variables that
-translate to potential causes of churn are the ouf of bundle, the tariff plan
-and the service usage (phone calls, messages, mobile data). We have no measure
+translate to potential causes of churn are the out of bundle, the tariff plan
+and service usage (phone calls, messages, mobile data). We have no measure
 for network quality, customer satisfaction, or propensity to move in the near
 future. Also, the wrong positioning is not explicitly encoded and has to be
 inferred by the causal inference model from the average service usage and the
@@ -399,18 +470,22 @@ after the description of each algorithm. In all cases, a false positive rate of
 
 \subsection{PC}
 
-\paragraph{Description} The PC algorithm \parencite{spirtes1991algorithm} returns
-the set of directed acyclic graphs that are faithful to a given probability
-distribution. It is based on independence tests between two variables,
-conditioned on a set of other variables. It uses the notion of d-separation to
-eliminate or find the direction of putative causal links. The PC algorithm is
-given in algorithm \ref{alg:pc}, where $\textbf{Adjacencies}(X)$ is the current
-set of nodes that are adjacent to $X$ in $\Gamma$. Therefore, it evolves as
-$\Gamma$ is modified in the algorithm. The idea underlying PC is to A) start
-with a full graph, B) remove edges using independence tests with conditioning
-sets of increasing size, C) orient colliders using the d-separation property,
-and D) find remaining orientations using two more rules. The assumptions
-underlying this algorithm are
+\paragraph{Description} The PC algorithm \parencite{spirtes1991algorithm}
+returns the set of directed acyclic graphs that are faithful to a given
+probability distribution. It is based on independence tests between two
+variables, conditioned on a set of other variables. It uses the notion of
+d-separation to eliminate or find the direction of putative causal links. The PC
+algorithm is given in algorithm \ref{alg:pc}, where $\textbf{Adjacencies}(X)$ is
+the set of nodes that are adjacent to $X$ in the current version of the result
+$\Gamma$. Therefore, it evolves as $\Gamma$ is modified in the algorithm. When
+two directions for a causal link are faithful, $\Gamma$ contains an undirected
+edge to represent the two directions at once. The result is thus a graph having
+directed and undirected edges, but which represent an equivalence class of
+undirected acyclic graphs. The idea underlying PC is to A) start with a full
+graph, B) remove edges using independence tests with conditioning sets of
+increasing size, C) orient colliders using the d-separation property, and D)
+find remaining orientations using two more rules. The assumptions underlying
+this algorithm are
 
 \begin{enumerate}[(i)]
     \item There is no unmeasured confounder
@@ -454,7 +529,7 @@ reasonable in our case, but the three others less so.
         \State D)
         \Repeat
             \State Orient all $X\rightarrow Y\text{---} Z$ as $X\rightarrow Y
-            \leftarrow Z$
+            \rightarrow Z$
             \State Orient all $X\text{---}Y$ as $X\rightarrow Y$ if there is
             a directed path from $X$ to $Y$
         \Until{no more edges can be oriented}
@@ -546,14 +621,15 @@ dependency between $X_1$ and $X_2$ brought by the knowledge of $Y$. On the one
 hand, a positive interaction occurs in 4 types of causal patterns, shown in
 figures \ref{fig:chain}, \subref{fig:common_cause}, \subref{fig:brotherhood} and
 \subref{fig:grandparent}. On the other hand, a negative interaction occurs only
-in the common cause configuration (figure \ref{fig:common_cause}) and the spouse
-configuration (figure \ref{fig:spouse}). Furthermore, one can differentiate
-between common causes and spouses by noticing that a spouse of the target has
-null unconditional relevance with the target (a spouse is relevant only when the
-common effect is known). In practice, a statistical test is used to determine
-the set of variables having non-null mutual information with the target, written
-$\bm X_+$. This leads to the update criterion of mIMR that is a linear
-combination of relevance and interaction:
+in the common effect configuration (figure \ref{fig:common_effect}) and the
+spouse configuration (figure \ref{fig:spouse}). Furthermore, one can
+differentiate between common effect and spouse configurations by noticing that a
+spouse of the target has null unconditional relevance with the target (a spouse
+is relevant only when the common effect is known). In practice, a statistical
+test is used to restrict the set of considered variables to those having
+non-null mutual information with the target, written $\bm X_+$. This leads to
+the update criterion of mIMR that is a linear combination of relevance and
+interaction:
 
 \begin{equation}
     X_{d+1}^* = \argmax_{X_k\in\bm X_+ \setminus \bm X_S}
@@ -654,7 +730,7 @@ combination of relevance and interaction:
 
     \caption{Possible causal patterns between two variables $X_1$ and $X_2$ and
     a target variable $Y$ having non-null interaction.}
-    \label{fig:markov_blanket}
+    \label{fig:causal_patterns}
 \end{figure}
 
 Using the approximation
@@ -685,7 +761,7 @@ similarly \ref{eq:mimr_final} is derived from \ref{eq:int_cond_sum}. The first t
 
 The mIMR filter is based on some underlying estimator of mutual information
 between two variables, and a statistical test of independence for selecting the
-set of unconditionally relevant variables.
+set of unconditionally relevant variables $\bm X_+$.
 
 \paragraph{Experimental setting} In this experiment, two implementations are
 used:
@@ -723,18 +799,22 @@ two cases. Asymmetrical patterns exist however in the joint probability density
 of a cause and its effect, as demonstrated by the results of the Kaggle
 competition Cause-effect pairs
 (\url{https://www.kaggle.com/c/cause-effect-pairs}). The D2C algorithm
-\parencite{bontempi2015dependency} is based on the asymmetry of descriptor
+\parencite{bontempi2015dependency} is based on the asymmetry of descriptors
 extracted from the Markov blanket of two causally linked variables. Consider two
 random variables $X_1$ and $X_2$ such that $X_1$ is a cause of $X_2$, and their
 respective Markov blanket $\MB(X_1)$ and $\MB(X_2)$. This setting is pictured in
 figure \ref{fig:d2c_mb}. We consider only one cause, effect and spouse per
 Markov blanket for the sake of the presentation, but the principles generalize
-obviously to any Markov blanket. Even though we cannot distinguish between
-causes, effects and spouses among $\MB(X_1)$ and $\MB(X_2)$, we can derive
-several inequalities using d-separation. Consider the variables $M_1$ and $M_2$,
-which are members of respectively  $\MB(X_1)$ and $\MB(X_2)$, but whose relation
-to $X_1$ and $X_2$ is unknown (that is, $M_1$ is either $C_1$, $E_1$ or $S_1$).
-We have
+obviously to any Markov blanket. Two assumptions are however made: i) the only
+path between $X_1\cup\MB(X_1)$ and $X_2\cup\MB(X_2)$ is the edge $X_1\rightarrow
+X_2$, and ii) $X_1$ and $X_2$ have no common ancestor with their respective
+spouse. Failure to satisfy these conditions is expected to be compensated for
+by the predictive model. Even though we cannot distinguish between causes,
+effects and spouses among $\MB(X_1)$ and $\MB(X_2)$, we can derive several
+inequalities using d-separation. Consider the variables $M_1$ and $M_2$, which
+are members of respectively  $\MB(X_1)$ and $\MB(X_2)$, but whose relation to
+$X_1$ and $X_2$ is unknown (that is, $M_1$ is either $C_1$, $E_1$ or $S_1$). We
+have
 
 \begin{equation}
 \label{eq:d2c_ineq}
@@ -796,17 +876,16 @@ of D2C uses a random forest classifier.
 \paragraph{Experimental setting}  The D2C model is trained using randomly
 generated DAGs, as described in \parencite{bontempi2015dependency} and
 implemented in the R package \emph{D2C}. We use 50 DAGs having each a number of
-nodes sampled uniformly between 10 and 20, and each DAG generated 50 to 200
-data samples. The function underlying the edge between two nodes is randomly
-chosen to be either linear, quadratic or a sigmoid. A Gaussian additive noise of
-standard deviation chosen randomly from 0.2 to 1 is added to each directed
-edge. The feature extraction phase uses the lazy learning approach
+nodes sampled uniformly between 10 and 20, and each DAG generated 50 to 200 data
+samples. The function underlying the edge between two nodes is randomly chosen
+to be either linear, quadratic or a sigmoid. A Gaussian additive noise of
+standard deviation chosen randomly from 0.2 to 1 is added to each directed edge.
+The feature extraction phase uses the lazy learning approach
 \parencite{bontempi1999lazy} to estimate mutual information, thus avoiding the
 linear assumption. We assume a Markov blanket of 4 variables when constructing
 the asymmetrical features. Given the high computational cost of feature
 extraction, 2,000 samples are used from the customer dataset. The results are
-provided as the predicted probability for each variable of being a cause of
-churn.
+provided as the predicted probability for each variable to be a cause of churn.
 
 \section{Results}
 
@@ -825,11 +904,11 @@ variables categories presented in section \ref{sec:churn_data}:
 \subsection{PC}
 
 The output of the PC algorithm is a dense graph linking most of the variables,
-but unfortunately, the churn variable is completely disconnected from the rest of
-the graph. Note that it also the case for the province, the device manufacturer,
-and the tariff plan. All these variables are strongly informative for predicting
-churn but have been ruled out of the Markov blanket of the churn variable in
-this algorithm by conditional independence tests.
+but unfortunately, the churn variable is completely disconnected from the rest
+of the graph. Note that it also the case for the province, the tariff plan, and
+other variables. All of these variables have been ruled out of the Markov
+blanket of the churn variable in this algorithm by conditional independence
+tests.
 
 \subsection{Grow-Shrink}
 
@@ -852,10 +931,10 @@ As explained by \textcite{tsamardinos2003algorithms}, the heuristic used in GS
 that favors variables having high unconditional relevance to the target
 increases the probability of false positive, since spouses of the target are not
 included in the beginning. Therefore, indirect causes or effects are included
-instead. This is particularly obvious in our case since the average duration of
-voice calls over the course of the three last months can be seen as a direct
-effect of the duration of voice calls in these three months. The average
-variable should therefore not be present in the Markov blanket.
+instead. This is particularly obvious in our case since the 4 variables related
+to voice calls are highly correlated, and some of them are known to be causes of
+the others. The same applies to the groups of variables related to data usage and
+messages.
 
 \subsection{Incremental Association Markov Blanket}
 
@@ -884,10 +963,10 @@ the 30 most predictive variables. These values are computed using our estimator
 presented in section \ref{sec:causal_intro}. Let $X_i$ and $X_j$ be two
 variables in our dataset, and let $Y$ be the churn variable. Figure
 \ref{fig:I_x_x} shows the mutual information $I(X_i, X_j)$ in the cell of
-position $(i, j)$. A line and column are also added for the churn variable. On
-the one hand, one can see that no single variable seems to have a high mutual
-information with the churn. This explains why the PC and IAMB algorithms fail to
-find a satisfactory Markov blanket for the churn variable. On the other hand, 3
+position $(i, j)$. A line is also added for the churn variable. On the one hand,
+one can see that no single variable seems to have a high mutual information with
+the churn. This could explain why the PC and IAMB algorithms fail to find a
+satisfactory Markov blanket for the churn variable. On the other hand, 3
 clusters of high mutual information can clearly be noticed, corresponding to the
 summary of voice calls, data usage and messages over the last 3 months. Given
 that these variables do not vary randomly from month to month, it is expected
@@ -896,10 +975,9 @@ average of the 3 months.
 
 The matrix in figure \ref{fig:I_x_x_inter} shows at position $(i, j)$ the
 interaction between two variables $X_i$ and $X_j$ and the churn variable $Y$,
-that is, $I(X_i, X_j, Y)$. The row and column corresponding to the churn are not
-relevant in this figure. Recall that the interaction between two variables and a
-target is the reduction in statistical dependence that the knowledge of the
-target brings:
+that is, $I(X_i, X_j, Y)$. The row corresponding to the churn is not relevant in
+this figure. Recall that the interaction between two variables and a target is
+the reduction in statistical dependence that the knowledge of the target brings:
 
 \begin{equation*}
     I(X_1, X_2, Y) = I(X_1, X_2) - I(X_1, X_2 | Y).
@@ -926,14 +1004,22 @@ the churn does not change their distributions.
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{figures/I_x_x.pdf}
-    \caption{Mutual information matrix}
+    \caption{Mutual information matrix. The color of the cell indicates the
+    statistical dependency between the row and column variables. Clusters of
+    high mutual information can be observed for calls, data usage, and messages
+    variables. The churn variable has a very low mutual information with other
+    variables.}
     \label{fig:I_x_x}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{figures/I_x_x_inter.pdf}
-    \caption{Matrix of interaction between two variables and the churn.}
+    \caption{Matrix of interaction with the churn. A large negative value
+    indicates that the row and column variables brings more information on churn
+    when considered together than when considered separately. The  province
+    variable has a high interaction with most other variables, as well as the
+    tariff plan to a lesser extent.}
     \label{fig:I_x_x_inter}
 \end{figure}
 
@@ -946,7 +1032,7 @@ mIMR criterion at this step of the algorithm, that is, the approximated value of
 $I(X_k, Y) - I(\bm X_S, X_k, Y)$ where $Y$ is the churn variable, $X_k$ is the
 variable under consideration and $\bm X_S$ is the set of variables selected
 before $X_k$ (i.e. above $X_k$ on the plot). The two first variables have no
-gain, since they are directly selected as the pair of variables having the
+gain since they are directly selected as the pair of variables having the
 highest interaction with the target. Unsurprisingly, the first two variables in
 figure \ref{fig:mimr_perso} are the tenure and the province (this couple of
 variable has the highest negative interaction in figure \ref{fig:I_x_x_inter}).
@@ -995,15 +1081,19 @@ for numerical variables, one-hot encoding is used. All the variables present in
 this plot are related to the tariff plan, previous tariff plan, province of
 residence and hardware-related variables. This is consistent with results of
 mIMR in figure \ref{fig:mimr_perso}, except for the second and last rows,
-related to the customer gender. Mobile data usage variables are also present and
-are the only variables related to service usage in this graph.
+related to a categorical socio-demogrpahic variable. Mobile data usage variables
+are also present and are the only variables related to service usage in this
+graph.
 
-We do not believe that gender has a causal relationship with churn, and this
-rank is most probably due to an artifact in the encoding of variables. Indeed,
-in the data preparation process, we noticed that data entries labeled as
-churners tend to have more often missing values in categorical variables. While
-this issue has been resolved, an unforeseen problem may have persisted in the
-gender variable.
+We do not believe that the socio-demographic variables D15 and D16 have a causal
+relationship with churn, and this rank is most probably due to an artifact in
+the encoding of variables. Indeed, in the data preparation process, we noticed
+that data entries labeled as churners tend to have more often missing values in
+categorical variables. This issue was caused by the inclusion in the dataset of
+customers that already churned, even though some variables has no longer a valid
+value for these customers. The solution was to remove such entries from the
+dataset, but a related, unforeseen problem may have persisted for these
+categorical variables.
 
 \begin{figure}
     \centering
@@ -1032,9 +1122,9 @@ distinct decrease in gain.
 As for the output of the D2C algorithm, although there seems to be a large
 number of variables, most of them are different one-hot encodings of the same
 original variable. The most probable causes as predicted by D2C are solely the
-tariff plan, previous tariff plan, province of residence, device manufacturer
-and data usage. It seems reasonable to consider these 5 variables as predicted
-causes.
+tariff plan, previous tariff plan, province of residence, data usage, and a
+hardware-related variable (H8). It seems reasonable to consider these 5
+variables as predicted causes.
 
 We summarize the results of the 5 algorithms (with the two implementations of
 mIMR) in table \ref{tab:causal_summary}. For each variable, we indicate by which
@@ -1071,13 +1161,14 @@ tariff plan are causes of churn are thus consistent with the observations.
         Voice calls          & \nok & \ok  & \nok & \nok & \nok & \nok \\
         \bottomrule
     \end{tabularx}
-    \caption{Summary of the results of causal analysis.}
+    \caption{Summary of the results of causal analysis. A green arrow indicates
+    which variables are output by each algorithm. The output is the Markov
+    blanket for PC, GS and IAMB, and direct causes for mIMR and D2C.}
     \label{tab:causal_summary}
 \end{table}
 
-In the absence of a formal procedure to assess these results, we could we will
-summarize the results of causal inference from observational data to the
-following statements:
+In the absence of a formal procedure to assess these results, we summarize the
+results of causal inference from observational data to the following statements:
 
 \begin{itemize}
     \item The  messages, the voice calls, as well as all variables not
@@ -1097,7 +1188,7 @@ exponential of a Gaussian (see figure \ref{fig:oob}). It is thus easy to
 understand why the other inference methods fail to report the causal link to the
 churn expected by our priors, due to the different estimators of mutual
 information. If it is true that the bill shock is a true cause of churn, then
-the results we observe on table \ref{tab:causal_summary} are not extraordinary.
+the results we observe in table \ref{tab:causal_summary} are not extraordinary.
 In other words, the credence in this theory is slightly, but not significantly,
 undermined.
 

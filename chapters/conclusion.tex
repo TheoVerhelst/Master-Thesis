@@ -1,8 +1,6 @@
 \chapter{Conclusion}
 
-This chapters summarizes the results of this thesis
-
-\subsection{Churn prediction}
+\section{Churn prediction}
 
 We summarize in this section the main results of the experiments on churn
 prediction. The numerical results are reproduced in table
@@ -20,7 +18,7 @@ significantly higher at the end of the mandatory period of a loyalty contract,
 facilitating the prediction process. Irrespective of the contract type,
 important variables include, non-exhaustively: the tenure, the province, the
 tariff plan, the number of calls, and the data usage. On the one hand, the
-tenure and the number of contract are observed to be monotonically associated to
+tenure and the number of contracts are observed to be monotonically associated with
 the churn probability. On the other hand, variables related to the amount paid
 by the customer are associated to more churn when they are increased, but the
 opposite is not true.
@@ -59,7 +57,7 @@ opposite is not true.
     \label{tab:results_conclusion}
 \end{table}
 
-\subsection{Causal analysis}
+\section{Causal analysis}
 
 The 5 different models used for causal analysis display different results. The
 PC algorithm shows no association between churn and the other variables. Of the
@@ -78,7 +76,8 @@ hypotheses of churn. These two explanations, however, do not explain fully the
 results we obtain, and further investigations are needed to interpret and
 understand the inferred causal link between churn and other variables.
 
-\subsection{Internal validity}
+\section{Internal validity}
+\label{sec:int_val}
 
 Internal validity refers to the confidence we can put into our results. More
 precisely, it represents the extent to which our results may be warranted, due
@@ -86,9 +85,9 @@ to systematic errors. We list here threats to internal validity.
 
 \begin{itemize}
 	\item The numerical implementation of causal inference methods relies on
-	assumption on the distribution of variables that does not always hold for
+	assumptions on the distribution of variables that does not always hold for
 	our dataset. In particular, the mutual information between continuous
-	variables is based on the linear assumption, whereas some variable are
+	variables is based on the linear assumption, whereas some variables are
 	inherently exponentially distributed.
 
 	\item The training phase of D2C is based on synthetic causal graphs, and we
@@ -113,7 +112,8 @@ to systematic errors. We list here threats to internal validity.
 
 \end{itemize}
 
-\subsection{External validity}
+\section{External validity}
+\label{sec:ext_val}
 
 External validity is the extent to which our results can be generalized to other
 contexts. We list here threats to external validity.
@@ -139,15 +139,31 @@ contexts. We list here threats to external validity.
 
 \end{itemize}
 
-\subsection{Future work}
+\section{Added value for Orange}
 
-The limitations of this thesis have been discussed in the previous section. Some
-of them suggest improvements that can lead to more thorough and unbiased
-conclusions on churn prediction. In particular, we did not investigate the use
-of different prediction models or hyper-parameters. We believe that the
-prediction performance can be further improved through the exploration of
-alternative and optimized models, such as gradient boosting, support vector
-machine or others.
+This thesis, conducted in collaboration with Orange, was also beneficial for
+them. The most obvious added value is that all conclusions we drawn from chapter
+\ref{ch:churn} and \ref{ch:caus} can directly be used to perform better churn
+prevention in production. This thesis displays an analysis work that would be
+difficult to perform for a data scientist at Orange due to time constraints.
+Also, this work is the start of a scientific collaboration between the Machine
+Learning Group from ULB and Orange Belgium. Future work is planned on causal
+inference applied to churn prevention, as presented in the next section. From a
+more practical point of view, the dataset used in this study has never been used
+before and this thesis showed that the variables included in this new dataset
+have a strong predictive power. Also, our code makes use of some R functions
+implemented originally for production models. We were thus able to assess the
+robustness and quality of these functions.
+
+\section{Future work}
+
+The limitations of this thesis have been discussed in sections
+\ref{sec:int_val} and  \ref{sec:ext_val}. Some of them suggest improvements that
+can lead to more thorough and unbiased conclusions on churn prediction. In
+particular, we did not investigate the use of different prediction models or
+hyper-parameters. We believe that the prediction performance can be further
+improved through the exploration of alternative and optimized models, such as
+gradient boosting, support vector machine or others.
 
 The evaluation of churn prediction models is based on the precision on a small
 subset of the test set (e.g. the lift at 5\%). A possible extension of our Easy
@@ -157,32 +173,32 @@ would favor models being less prone to consider non-churners as churners on
 unseen data.
 
 A funding request has been introduced to the Innoviris organism for an ``Applied
-PhD'' program. This program consists in a funding for doctoral research with an
-industrial partner, Orange in our case. The aim of this PhD is to take further
+PhD'' program. This program consists in funding for doctoral research with an
+industrial partner, Orange in our case. The aim of this Ph.D. is to take further
 the work of this master thesis by conducting a more thorough evaluation of churn
 prediction, developing data visualization and understanding tools, and
 performing a more extensive causal inference research. In particular, the
 retention campaigns as they are conducted at Orange will be used as a way of
 verifying causal hypotheses, which is a rather unique opportunity in causal
-inference research. If the funding is granted, this PhD will span on 4 years. A
-schematic overview of the research process is pictured on figure
+inference research. If the funding is granted, this Ph.D. will span on 4 years.
+A schematic overview of the research process is pictured in figure
 \ref{fig:machu-picchu}. The first year will be dedicated to churn prediction
-much like the chapter 3 of this master thesis, and the remaining 3 years will be
-dedicated to causal inference. At first, causal analysis from observational data
-will be used, like the chapter 4 of this master thesis. Then, retention
-campaigns will be used to verify and define more precisely causal hypotheses
-formed from previous analysis. Predictions models will indicate on which
-customer the retention campaign should be focused.
+much like the third chapter of this master thesis, and the remaining 3 years
+will be dedicated to causal inference. At first, causal analysis from
+observational data will be used, as in the fourth chapter of this master thesis.
+Then, retention campaigns will be used to verify and define more precisely
+causal hypotheses formed from previous analyses. Predictions models will
+indicate on which customer the retention campaign should be focused.
 
 \begin{figure}
     \centering
 	\includegraphics[width=0.95\linewidth]{figures/machu-picchu.pdf}
-	\caption{Closed-loop validation process planned for the applied PhD
+	\caption{Closed-loop validation process planned for the applied Ph.D.
 	project.}
 	\label{fig:machu-picchu}
 \end{figure}
 
-\subsection{Conclusion}
+\section{Conclusion}
 
 We approached the churn prediction problem in the telecommunication industry
 with Orange Belgium customer data. A descriptive analysis of the dataset has
@@ -195,12 +211,12 @@ features. The results show that variable selection helps reducing computation
 time, but can decrease performance. Also, the addition of features consisting in
 the difference and the ratio of numerical variable seems to reduce the
 performance. The directionality of the impact of variables on churn is estimated
-through a sensitivity analysis. This shows that some variables are associated to
-the churn probability in a non-monotonic way. We explored the application of
-causal inference from observational data. More specifically, we applied 5
+through a sensitivity analysis. This shows that some variables are associated
+with the churn probability in a non-monotonic way. We explored the application
+of causal inference from observational data. More specifically, we applied 5
 different causal inference methods, namely PC, Grow-Shrink (GS), Incremental
 Association Markov Blanket (IAMB), minimum Interaction Maximum Relevance (mRMR),
-and D2C. The results of these algorithms are varied, and are partly consistent
-with prior knowledge on the causes of churn. This research highlights the
+and D2C. The results of these algorithms are varied and are partly consistent
+with prior knowledge of the causes of churn. This research highlights the
 difficulty of carrying out causal inference in a realistic setting, due to the
 large variety of variable types and distributions.

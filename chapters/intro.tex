@@ -3,7 +3,7 @@
 
 \section{Churn in the telecommunication industry}
 
-In recent years, the number of mobile phone users increased dramatically,
+In recent years, the number of mobile phone users increased substantially,
 reaching more than 3 billion users worldwide. The number of mobile phone service
 subscriptions is above the number of residents in several countries, including
 Belgium \parencite{itu2018itu}. Telecommunication companies are evolving in a
@@ -18,18 +18,19 @@ lifetime value.
 
 One of the various marketing processes used to improve customer relationship is
 to conduct retention campaigns. This traditionally consists in selecting clients
-at random and offering them some a promotion or advantage. Typical promotions
-include a reduced invoice, free calls, SMS or data volume. However, it is well
-possible that the customers thus reached might never have planned to churn in
-the first place. While this of course not a problem for the customer, it would
-be far more beneficial for the telecommunication company to be able to focus the
-retention campaigns on risky customers, in the hope of preventing attrition that
-would otherwise occur if no action is taken. The problem of detecting churn can
-be addressed with \emph{data mining}, by collecting data about customers and
-using this information to infer typical patterns exhibited by risky clients.
-This data-driven approach is nowadays taken by most major telecommunication
-companies, and a part of the data mining literature is devoted to churn
-detection. We will describe this approach further in the next section.
+according to some simple statistical criteria and offering them a promotion or
+advantage. Typical promotions include a reduced invoice, free calls, SMS or data
+volume. However, due to the limited nature of this statistical analysis, it is
+plausible that the customers thus reached might never have planned to churn
+in the first place. While this is of course not a problem for the customer, it
+would be far more beneficial for the telecommunication company to be able to
+focus the retention campaigns only on risky customers, in the hope of preventing
+attrition that would otherwise occur if no action is taken. The problem of
+detecting churn can be addressed with \emph{data mining}, by collecting data
+about customers and using this information to infer typical patterns exhibited
+by risky clients. This data-driven approach is nowadays taken by most major
+telecommunication companies, and a part of the data mining literature is devoted
+to churn detection. We will describe this approach further in the next section.
 
 
 
@@ -37,7 +38,7 @@ detection. We will describe this approach further in the next section.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\linewidth]{figures/churn_diagram}
+    \includegraphics[width=\linewidth]{figures/churn_diagram}
     \caption{The churn prevention process implemented at Orange.}
     \label{churn_diagram}
 \end{figure}
@@ -45,36 +46,42 @@ detection. We will describe this approach further in the next section.
 The churn prevention process (depicted in figure \ref{churn_diagram}) starts by
 collecting data about the customers and creating a \emph{historical database}.
 This data summarizes the calls, messages, internet usage and other actions
-performed by the customers. It also includes information about the subscription,
-such as the type of tariff plan, its price, the subscription date, and so on.
-Finally, personal data provided by the customer may as well be used, such as the
-age or the place of residence. \emph{Data mining} is then used to provide a
-quantitative understanding of the customers and their overall behavior. In
-particular, the difference between churners and non-churners can be highlighted.
-This is useful to decide which type of machine learning procedure should be used
-for churn prediction, but can also bring valuable knowledge to marketing and
-customer relationship teams. Once the data is sufficiently understood, a set of
-relevant \emph{machine learning} models are built. These models learn from the
-historical data the patterns typically exhibited by clients that will churn in
-the near future. The types of patterns being learned, the techniques used to find
-them, and the underlying assumptions are dependent on the model under
-consideration. For example, a \emph{naive Bayes classifier} assumes that each
-variable contributes to the probability of churn independently of the other
-variables. In order to decide which model should be selected, the performances
-of each model are compared by testing them on data left out of the training
-phase. Feature selection is also performed, and consists in evaluating the
-importance of each variable for predicting churn and training the model by
-using only the most important ones. This reduces the computation time, and
-generally improves the performances of the model since this reduces the noise
-unimportant variables bring along. Once an efficient model has been selected,
-the latest customer data is  submitted to the model, which outputs a probability
-of churn for each customer. By ordering the customers by churn probability, a
-list of the riskiest customers is established and sent to the campaigning team.
-They split this set of clients into a \emph{target group} and a \emph{control
-group}. Each customer of the target group is offered an incentive either by
-phone call, email or message, while the control group is left untouched. This
-allows, a few months later, to evaluate the impact of the retention campaign by
-assessing the difference of churn rate in retrospective in the two groups.
+performed by the customers\footnote{This data is limited to the metadata of the
+phone call, message, or internet usage. The content of the communication is
+never used. Moreover, the location information in the metadata is also
+excluded.}. It also includes information about the subscription, such as the
+type of tariff plan, its price, the subscription date, and so on. Finally,
+personal data provided by the customer may as well be used, such as the age or
+the place of residence. \emph{Data mining} is then used on this database to
+provide a quantitative understanding of the customers and their overall
+behavior. In particular, the difference between churners and non-churners
+behavior can be visualized. This is useful to decide which type of machine
+learning procedure should be used for churn prediction, but can also bring
+valuable knowledge to marketing and customer relationship teams. Once the data
+is sufficiently understood, a set of relevant \emph{machine learning} models are
+built. These models learn from the historical data the patterns typically
+exhibited by clients that will churn in the near future. The types of patterns
+being learned, the techniques used to find them, and the underlying assumptions
+are dependent on the model under consideration. For example, a \emph{naive Bayes
+classifier} assumes that each variable is independent of the others if we know
+whether the customer is a churner or not. In order to decide which model should
+be selected, the performances of each model are evaluated by testing them on
+data left out of the training phase, and different models are compared. Feature
+selection is also performed, and consists in evaluating the importance of each
+variable for predicting churn and training the model by using only the most
+important ones. This reduces the computation time and generally improves the
+performances of the model since this reduces the noise unimportant variables
+bring along. Once an efficient model has been selected, the latest customer data
+is  submitted to the model which outputs a probability of churn for each
+customer. By ordering the customers by churn probability, a list of the riskiest
+customers is established and sent to the campaigning team. They split this set
+of clients into a \emph{target group} and a \emph{control group}. Each customer
+of the target group is offered an incentive either by phone call, email or
+message, while the control group is left untouched. This allows, a few months
+later, to evaluate the impact of the retention campaign by assessing the
+difference of churn rate in retrospective in the two groups. Also, the accuracy
+of the prediction model can be evaluated by comparing the control group and the
+rest of the customer base
 
 \section{Causal inference}
 
@@ -87,38 +94,50 @@ probability of churn. This prediction therefore does not indicate \emph{why} the
 customer is about to stop her subscription. We need different analysis tools to
 tackle this problem. This is the purpose of \emph{causal inference}, which is a
 formal approach to find the causes of some event in a system. Causal inference
-is usually conducted through \emph{controlled randomized experiments}, but the
-scope of this master thesis did not allow such experiments. We therefore focus
-on data-driven approaches, which are based on some properties of the statistical
-distribution of causally linked variable.
+is usually conducted through \emph{controlled randomized experiments}
+\parencite{fisher1937design}. In the context of customer relationship
+management, controlled experiments are possible through retention campaigns,
+where the offers made to the customers act as variable manipulations. For
+example, offering a discount would act on the variable ``invoice amount''. Such
+experiment is out of the scope of this master thesis, since it requires time,
+planning, and a collaboration with the direct marketing department. We thus
+focus on data-driven approaches, which are based on some properties of the
+statistical distribution of causally linked variable.
 
 To give an example of how causal inference can be conducted without experiment,
-consider the simplistic world where two tariff plans are available, an expensive
-one and a cheap one. The expensive plan makes customers consume more data per
-month, and increases their probability to churn. We represent such causal
-scenario with a \emph{directed acyclic graph} as in figure \ref{simple_causal}.
-We plotted the data usage against the probability of churn for each tariff plan
-in figure \ref{simple_causal_plot}. A positive correlation can be observed
-between data usage and churn, but disappears when considering each tariff plan
+consider the simplistic world where two types of phone are available, an
+expensive one and a cheap one. The expensive phone type makes customers consume
+more data per month than the cheap one, because more data-hungry application are
+available on it. Also, it increases the probability of churn because these
+phones are targeted more often by concurrent advertisement. We represent such
+causal scenario with a \emph{directed acyclic graph} as in figure
+\ref{fig:simple_causal}. We assume that once we know the phone type of a
+customer, its data usage and its propensity to churn are independent, since
+these are two different consequences of the customer's choice of phone. We
+plotted the data usage against the probability of churn for type of phone in
+figure \ref{fig:simple_causal_plot}. A positive correlation can be observed
+between data usage and churn but disappears when considering each phone type
 separately. If a causal relationship also existed between data usage and churn
-probability, the correlation would still be visible, even when conditioning on
-the tariff plan. This idea of conditioning to discard putative causal links is
-at the basis of most causal inference algorithms.
+probability, the statistical dependency would still be visible, even when
+conditioning on the phone type. This idea of conditioning to discard putative
+causal links is at the basis of most causal inference algorithms.
 
-Such inference methods are based on a number of assumptions, such as the absence
-of confounding factor. This assumption would be violated if, in our previous
-example, the age of the customer influences both its choice of tariff plan and
-its propensity  to churn. The causal inference algorithm would still conclude
-that the expensive tariff plan causes clients to churn, while in reality they
-churn solely because of their young age. This sort of erroneous conclusions can
-lead to ineffective action in retention campaigns. Other inference methods imply
-other assumptions, and care must be exercised when using them.
+Such inference methods are based on a number of modeling assumptions, such as
+ability to represent the underlying causal mechanism by a graph as in figure
+\ref{fig:simple_causal}, or the absence of confounding factor. This latter
+assumption would be violated if, in our previous example, the age of the
+customer influences both its choice of phone type and its propensity  to churn.
+The causal inference algorithm would still conclude that the expensive phones
+causes clients to churn, while in reality, they churn solely because of their
+young age. This sort of erroneous conclusions can lead to ineffective action in
+retention campaigns. Other inference methods imply other assumptions, and care
+must be exercised when using them.
 
 \begin{figure}
     \centering
     \begin{tikzpicture}
         \begin{scope}[every node/.style={ellipse,thick,draw}]
-            \node (1) at (0, 0) {Tariff plan};
+            \node (1) at (0, 0) {Phone type};
             \node[below left = of 1] (2) {Data usage};
             \node[below right = of 1] (3) {Churn};
         \end{scope}
@@ -129,15 +148,15 @@ other assumptions, and care must be exercised when using them.
         \end{scope}
     \end{tikzpicture}
     \caption{Toy example of a causal diagram.}
-    \label{simple_causal}
+    \label{fig:simple_causal}
 \end{figure}
 
 \begin{figure}
     \centering
-    \input{figures/simple_causal_plot.tex}
+    \includegraphics[width=4in]{figures/simple_causal_plot.pdf}
     \caption{Toy example of data usage against the probability of churn for
-    different tariff plans.}
-    \label{simple_causal_plot}
+    different phone types.}
+    \label{fig:simple_causal_plot}
 \end{figure}
 
 \section{Context and motivation}
@@ -149,24 +168,34 @@ This collaboration enables us to work on real-world data, in Orange Belgium
 premises, and with people directly involved in the subject (data science and
 business intelligence teams at Orange). The churn prediction problem is
 challenging in many regards: the dataset is large (in our case, 1.5 million
-entries per month, on 5 months), highly imbalanced (there is very few churners
-in the whole customer base), and highly overlapping (many non-churners exhibit
-the same behavior as churners). It is therefore an interesting subject for a
-master thesis in machine learning, since it requires the use of different
+entries per month, over 5 months), highly imbalanced (there are very few
+churners in the whole customer base), and highly overlapping (many non-churners
+exhibit the same behavior as churners). It is therefore an interesting subject
+for a master thesis in machine learning, since it requires the use of different
 state-of-the-art tools for overcoming these challenges.
 
-The interest for causal inference comes from the experience of the Machine
-Learning Group (MLG) in the subject. They mainly applied causal inference onto
-bioinformatics application, such as gene selection
-\parencite{bontempi2011multiple} or microarray data
-\parencite{bontempi2010causal}. More recently, a competition in causal analysis
+The churn prediction task shares many similarities with the fraud detection
+problem, for example regarding the class imbalance and overlap, and the large
+amount of data. The Machine Learning Group (MLG) has a fruitful collaboration
+with Wordline in fraud detection since 2012 when Prof. Bontempi wrote and
+supervised the Doctiris project ``Adaptive real-time machine learning for credit
+card fraud detection'' (PhD student: Andrea Dal Pozzolo). The research activity
+in this domain continued thanks to ``Brufence: Scalable machine learning for
+automating defense system'' project and the recent TEAM-UP project DefeatFRAUD.
+This thorough experience in the subject is a motivation and a valuable asset to
+pursue research in churn prediction.
+
+The interest for causal inference comes from the experience of the MLG in the
+subject. They mainly applied causal inference onto bioinformatics application,
+such as gene selection \parencite{bontempi2011multiple} or microarray data
+\parencite{bontempi2010causal}. More recently, a competition on causal analysis
 was organized on the Kaggle website
 (\url{https://www.kaggle.com/c/cause-effect-pairs}), with the goal of fostering
 causal discovery between two variables. This led to the development of new
 methods, notably using machine learning \parencite{bontempi2015dependency}.
-Moreover, the use of causal inference is seldom explored in the literature of
+Moreover, the use of causal inference is seldom explored in the literature on
 churn prevention. It is thus stimulating to conduct research at the intersection
-of the these two domains, benefiting from the technical expertise of the MLG and
+of these two domains, benefiting from the technical expertise of the MLG and
 the business knowledge of Orange.
 
 \section{Contributions}
@@ -178,6 +207,10 @@ The main contributions of this thesis are
     prediction model, and the impact of several variations of the model by using
     different features and different type of subscription contracts (section
     \ref{sec:churn_exp}).
+    \item Assessment of the directionality of the impact of a variable on
+    prediction, by shifting the value of the variable in the test set and
+    measuring the difference in average predicted score (section
+    \ref{sec:churn_sens}).
     \item Study of causal analysis, and its application to churn prediction from
     observational data (section \ref{sec:causal_experiments}).
 \end{itemize}
@@ -191,20 +224,14 @@ This master thesis is partitioned into 5 chapters, presented here.
 	telecommunication industry, the current methods in use to tackle it, and the
 	contributions of this master thesis.
 
-    \item (Chapter 2) State of the art in churn prediction:
+    \item (Chapter 2) Exposition of the state of the art in churn prediction
+    and causal analysis.
     \begin{itemize}
-        \item Choice of predictive model
-        \item Data preprocessing
-        \item Class balancing
-        \item Evaluation measure
-    \end{itemize}
-    And state of the art in causal analysis:
-    \begin{itemize}
-        \item Bayesian network learning
-        \item Markov blanket inference
-        \item Information-theoretic filters
-        \item Bivariate methods
-        \item Supervised methods
+        \item Churn prediction: choice of predictive model, data preprocessing,
+        class balancing and evaluation measure.
+        \item Causal analysis: Bayesian network learning, Markov blanket
+        inference, information-theoretic filters, bivariate and supervised
+        methods.
     \end{itemize}
 
 	\item (Chapter 3) Assessment of a churn prediction model on Orange customer
@@ -214,7 +241,7 @@ This master thesis is partitioned into 5 chapters, presented here.
 		\item Description of the data preparation
 		\item Description of the experimental setting
 		\item Presentation of the results
-        \item Comparison to other state of the art methods
+        \item Comparison to other state-of-the-art methods
 		\item Conclusion and main outcomes of the experiments
 	\end{itemize}
 
@@ -223,7 +250,7 @@ This master thesis is partitioned into 5 chapters, presented here.
     \begin{itemize}
         \item Theoretical background for causal inference
         \item Scope of application
-        \item Prior knowledge on the possible causes of churn
+        \item Prior knowledge of the possible causes of churn
         \item Description of the experimental setting
         \item Presentation of the results
         \item Discussion and conclusion
@@ -235,7 +262,9 @@ This master thesis is partitioned into 5 chapters, presented here.
 \section{Notation}
 
 The mathematical notation used throughout this document is presented in table
-\ref{tab:notation}
+\ref{tab:notation}. Bold font denotes vectors or sets, and uppercase letters
+denote random variables. A uppercase bold font thus denotes a set or vector of
+random variables.
 
 \begin{table}
     \centering
@@ -243,18 +272,18 @@ The mathematical notation used throughout this document is presented in table
         \toprule
         $n$ & Number of features\\
         $\mathcal X\subseteq\mathbb R^n$ & Feature space\\
-        $\bm X = [X_1,\dots,X_n]$ & Vector of random variables in the feature space\\
+        $\bm X = [X_1,\dots,X_n]$ & Vector of random variables in $\mathcal X$\\
         $\bm x = [x_1,\dots,x_n]$ & Feature vector, realization of $\bm X$\\
         $\mathcal Y=\{0, 1\}$ & Target label space\\
         $y\in\mathcal Y$ & Example label \\
         $P(e)$ & Probability of an event $e$\\
-        $s\in [0, 1]$ & Predicted churn probability for a given $\bm x$\\
+        $S$ & Random variable of predicted score as a function of $\bm X$\\
+        $s$ & Predicted score for a given $\bm x$, realization of $S$\\
         $t\in [0, 1]$ & decision threshold\\
-        $f_y(s)$ & Probability density of $s$ for instances labeled $y$\\
-        $F_y(s)$ & Cumulated distribution of $s$ for instances labeled $y$\\
-        $A\perp B$ & Random variable $A$ and $B$ are independent\\
-        $\bm X_1\setminus \bm X_2$ & Set difference between $\bm X_1$ and $\bm
-        X_2$\\
+        $f_y(s)$ & Probability density function of $S$ for instances labeled $y$\\
+        $F_y(s)$ & Cumulative distribution function of $S$ for instances labeled $y$\\
+        $X\perp Y$ & Random variables $X$ and $Y$ are independent\\
+        $\bm X\setminus \bm Y$ & Set difference between $\bm Y$ and $\bm Y$\\
         \bottomrule
     \end{tabular}
     \caption{Summary of the mathematical notation.}
