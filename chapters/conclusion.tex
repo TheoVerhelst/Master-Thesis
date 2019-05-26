@@ -90,14 +90,23 @@ to systematic errors. We list here threats to internal validity.
 	variables is based on the linear assumption, whereas some variables are
 	inherently exponentially distributed.
 
+    \item Latent confounding is probably present in the dataset since it was not
+    designed to perform causal analysis. In particular, we believe that
+    variables representing customer satisfaction (e.g. number of calls to the
+    customer service), network quality (e.g. number of network cuts during a
+    call), and wrong positioning would greatly help in reducing confounding.
+
 	\item The training phase of D2C is based on synthetic causal graphs, and we
 	did not investigate alternative options for this phase. It is possible to
 	create graphs that resemble more the data at hand, therefore reducing bias.
 
-	\item In the causal inference experiments, sub-sampling with even class
+	\item In the causal inference experiments, undersampling with even class
 	balancing is used to reduce computational load. When the number of selected
 	samples is low, we may miss causal results not represented in the sample, or
-	infer spurious ones.
+	infer spurious ones. Even in the case of the IAMB and GS algorithms that use
+	the entire set of churners, the majority of non-churner instances are
+	discarded. This causes sampling bias, and we have no theoretical nor
+	empirical guarantees that the methods we used are optimal in this regard.
 
 	\item The dataset used in this study was created recently. Some problems
 	occurred during the coding phase, leading to multiple iterations of the

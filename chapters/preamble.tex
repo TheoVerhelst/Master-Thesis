@@ -35,37 +35,45 @@
 }
 
 \cleartorecto
-
 \thispagestyle{plain}
+
 \begin{vplace}
 \begin{abstract}
 
 Telecommunication companies are evolving in a highly competitive market where
 attracting new customers is more expensive than retaining existing ones.
-Retention campaigns can be used to prevent customer churn, but this
-requires efficient churn prediction models. Such prediction is a difficult
-problem, involving large amount of data, non-linearity, imbalance and overlap
-between churners and non-churners. In this master thesis, we approach this
-problem with Orange Belgium customer data. A descriptive analysis of the dataset
-is conducted, and predictive modeling of churn is achieved with a random forest
+Retention campaigns can be used to prevent customer churn, but this requires
+efficient churn prediction models. Such prediction is a difficult problem,
+involving large amount of data, non-linearity, imbalance and overlap between
+churners and non-churners. In this master thesis, we approach this problem with
+Orange Belgium customer data. A descriptive analysis of the dataset is
+conducted, and predictive modeling of churn is achieved with a random forest
 classifier. The large class imbalance between the two classes is handled with
 the Easy Ensemble algorithm. We assess the impact of different data
 preprocessing techniques such as feature selection and creation of new features.
 The directionality of the impact of variables on churn is estimated through a
-sensitivity analysis. Also, we explore the application of data-driven causal
-inference, which allows to infer causal relationships between variables purely
-from observational data. More specifically, a causal Bayesian network, two
-methods of Markov blanket inference, two causal filters and a supervised method
-are applied. We draw general conclusions on the possible causes of churn,
-supported by the prior knowledge of experts at Orange Belgium.
+sensitivity analysis. We observe that feature selection can be used to reduce
+computation time and memory requirements, but the new variables we engineered do
+not improve performance. Important variables include, non-exhaustively: the
+tenure, the tariff plan, the number of calls, and the data usage. We explore the
+application of data-driven causal inference, which allows to infer causal
+relationships between variables purely from observational data. More
+specifically, a causal Bayesian network, two methods of Markov blanket
+inference, two causal filters and a supervised method are applied. Supported by
+the prior knowledge of experts at Orange Belgium, we conclude that the bill
+shock and the wrong tariff plan positioning are likely hypotheses of churn.
 
 \end{abstract}
-\vfill{}
+\end{vplace}
+
+\clearpage
+\thispagestyle{plain}
+\begin{vplace}
 \begin{otherlanguage}{french}
 \begin{abstract}
 
 Les compagnies de télécommunication évoluent dans un marché hautement compétitif
-où attirer de nouveaux clients est plus coûteux que retenir les clients déjà
+où attirer de nouveaux clients est plus coûteux que de retenir les clients déjà
 présents. Des campagnes de rétention peuvent être utilisées pour réduire la
 résiliation des clients, mais cela nécessite des modèles de prédiction
 efficaces. La prédiction de résiliation est un problème difficile, impliquant de
@@ -77,15 +85,20 @@ effectuée, et une modélisation prédictive de la résiliation est obtenue en
 utilisant un classificateur random forest. Le non-équilibrage entre les classes
 est pris en compte avec l'algorithme Easy Ensemble. Nous évaluons l'impact de
 différentes techniques de prétraitement de données, telles que la sélection de
-variables et la création de nouvelles variables. La directionalité de l'impact
-des variables sur la résiliation est déduite avec une analyse de sensibilité.
-Nous explorons également l'utilisation de l'inférence causale, qui permet de
-comprendre les liens de causalité entre différentes variables à partir de
-données d'observation. Plus spécifiquement, nous utilisons un réseau bayésien
-causal, une méthode d'inférence de couverture de Markov, deux filtres causaux et
-une méthode supervisée. Nous en tirons des conclusions générales sur les
-possibles causes de la résiliation, en prenant en compte les connaissances à
-priori d'experts chez Orange Belgium
+variables et la création de nouvelles variables. La direction de l'impact des
+variables sur la résiliation est déduite avec une analyse de sensibilité. On
+constate que la sélection de variables permet de réduire les besoins en temps de
+calcul et en mémoire, mais les nouvelles variables que nous avons conçues
+n'améliorent pas les performances. Les variables importantes sont,
+non-exhaustivement: la date d'inscription, le plan tarifaire, le nombre moyen
+d'appels, et la consommation de données. Nous explorons l'utilisation de
+l'inférence causale, qui permet de comprendre les liens de causalité entre
+différentes variables à partir de données d'observation. Plus spécifiquement,
+nous utilisons un réseau bayésien causal, une méthode d'inférence de couverture
+de Markov, deux filtres causaux et une méthode supervisée. En prenant en compte
+les connaissances préalables d'experts chez Orange Belgium, nous concluons
+qu'une \og~mauvaise surprise~\fg{} à la réception de la facture et un mauvais
+positionnement de plan tarifaire sont deux causes probables de résiliation.
 
 \end{abstract}
 \end{otherlanguage}
@@ -114,13 +127,15 @@ I would like to thank my fellow students at the ULB for the mutual support and
 the uncountable science-enthusiastic discussions, fostering my motivation to
 pursue scientific research.
 
+The attentive reading of Bertrand Lebichot and Arnaud Pollaris was greatly
+appreciated, as they gave me insightful remarks to make my text clearer and more
+comprehensible.
+
 Lastly, I would like to express my gratitude to Prof. Tom Lenaerts and Prof.
 Bernard Manderick for accepting to evaluate my thesis. Moreover, Prof. Tom
 Lenaerts also allowed me to take part in an Erasmus program at Southampton
 University, which played a significant role in my academic formation.
 
-\clearpage
-
+\newgeometry{right=2.5cm,top=0.5cm,bottom=2.5cm,left=3.5cm}
 \tableofcontents*
-%\listoffigures
-%\listoftables
+\restoregeometry

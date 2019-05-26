@@ -383,7 +383,7 @@ in general. We summarize the main causes of churn in four different settings.
 
 \paragraph{Bill shock} This setting has been already evoked multiple times in
 chapter \ref{ch:churn}. It occurs when a customer has an unusually large
-service usage, which results in an important out of bundle amount (i.e. the
+service usage, which results in an important ``out of bundle'' amount (i.e. the
 client is charged much more than usual). This triggers a reaction from the
 customer inducing an increased risk of churn. This scenario is well understood
 and verified in practice. It is believed to be the most important cause of
@@ -397,13 +397,13 @@ better alternatives elsewhere.
 
 \paragraph{Wrong positioning} Each customer has different service usage habits.
 Some people make a few minutes of phone calls per month, whereas this can be
-counted in hours for others. This is why multiple tariff plans are proposed by the
-service provider. However, choosing the right tariff plan is sometimes
-difficult. On the one hand, if not enough call time is provisioned, an out of
-bundle amount is likely to be charged at the end of the month. On the other
+counted in hours for others. This is why multiple tariff plans are proposed by
+the service provider. However, choosing the right tariff plan is sometimes
+difficult. On the one hand, if not enough call time is provisioned, an ``out of
+bundle'' amount is likely to be charged at the end of the month. On the other
 hand, an expensive tariff plan results in a high fixed cost for the customer.
-When the tariff plan of the customer does not correspond to her needs, we say
-that the customer is wrongly positioned. A wrong positioning results in most
+When the needs of a customer does not correspond to the chosen tariff plan, we
+say that the customer is wrongly positioned. A wrong positioning results in most
 cases to a higher bill that expected, and is a significant cause of churn.
 
 \paragraph{Churn due to a move} It is common to choose a product bundle from a
@@ -422,7 +422,7 @@ debates on the definition of causality, which are well beyond the scope of this
 thesis. More practically, we wish to find a mapping between the events believed
 to be causes of churn and specific instantiations of measurable random
 variables. In the case of the first setting, we can reasonably assume that
-variables measuring the out of bundle amount of the customer is a faithful proxy
+variables measuring the ``out of bundle'' amount of the customer is a faithful proxy
 for bill shock.  Similarly, customer satisfaction can be estimated using,
 for example, the number of network cuts during phone calls, or the number of
 calls to the customer service. The wrong positioning can also be numerically
@@ -432,7 +432,7 @@ is not directly related to the interaction between the client and the
 telecommunication services.
 
 In the dataset available for this study, the only measured variables that
-translate to potential causes of churn are the out of bundle, the tariff plan
+translate to potential causes of churn are the ``out of bundle'', the tariff plan
 and service usage (phone calls, messages, mobile data). We have no measure
 for network quality, customer satisfaction, or propensity to move in the near
 future. Also, the wrong positioning is not explicitly encoded and has to be
@@ -570,10 +570,11 @@ of spouses, since those have small unconditional relevance to $Y$. Therefore,
 more false positives are included before spouses get into $\MB(Y)$.
 
 \paragraph{Experimental setting} The entire set of positive samples is used,
-along with a subset of the same size of negative samples. This amounts to a
-total of 240,168 samples. The GS algorithm has been implemented using the
-independence test in the package \emph{bnlearn}. The results are given as a
-list of members of the Markov blanket.
+along with a subset of the same size of negative samples. The resulting number
+of samples cannot be disclosed due to confidentiality reasons, as it would allow
+to infer the actual churn rate in the dataset. The GS algorithm has been
+implemented using the independence test in the package \emph{bnlearn}. The
+results are given as a list of members of the Markov blanket.
 
 
 \subsection{Incremental Association Markov Blanket}
@@ -795,10 +796,8 @@ unable to differentiate between indistinguishable causal patterns, such as the
 two variables configuration or the fully-connected three variables
 configuration. Since the probability density $P$ is reduced to a set of
 (in)dependence relations, any fully connected graph is faithful to $P$ in these
-two cases. Asymmetrical patterns exist however in the joint probability density
-of a cause and its effect, as demonstrated by the results of the Kaggle
-competition Cause-effect pairs
-(\url{https://www.kaggle.com/c/cause-effect-pairs}). The D2C algorithm
+two cases. Asymmetrical patterns exist however in the structural nature of the
+dependencies between two variables and the remaining ones. The D2C algorithm
 \parencite{bontempi2015dependency} is based on the asymmetry of descriptors
 extracted from the Markov blanket of two causally linked variables. Consider two
 random variables $X_1$ and $X_2$ such that $X_1$ is a cause of $X_2$, and their
@@ -808,13 +807,12 @@ Markov blanket for the sake of the presentation, but the principles generalize
 obviously to any Markov blanket. Two assumptions are however made: i) the only
 path between $X_1\cup\MB(X_1)$ and $X_2\cup\MB(X_2)$ is the edge $X_1\rightarrow
 X_2$, and ii) $X_1$ and $X_2$ have no common ancestor with their respective
-spouse. Failure to satisfy these conditions is expected to be compensated for
-by the predictive model. Even though we cannot distinguish between causes,
-effects and spouses among $\MB(X_1)$ and $\MB(X_2)$, we can derive several
-inequalities using d-separation. Consider the variables $M_1$ and $M_2$, which
-are members of respectively  $\MB(X_1)$ and $\MB(X_2)$, but whose relation to
-$X_1$ and $X_2$ is unknown (that is, $M_1$ is either $C_1$, $E_1$ or $S_1$). We
-have
+spouse. Failure to satisfy these conditions is expected to be compensated for by
+the predictive model. Even though we cannot distinguish between causes, effects
+and spouses among $\MB(X_1)$ and $\MB(X_2)$, we can derive several inequalities
+using d-separation. Consider the variables $M_1$ and $M_2$, which are members of
+respectively  $\MB(X_1)$ and $\MB(X_2)$, but whose relation to $X_1$ and $X_2$
+is unknown (that is, $M_1$ is either $C_1$, $E_1$ or $S_1$). We have
 
 \begin{equation}
 \label{eq:d2c_ineq}
@@ -918,7 +916,7 @@ The Markov blanket output by the GS algorithm contains 21 variables:
     \item 4 variables related to voice calls (C5, C6, C7, and C8)
     \item 6 variables related to data usage (U1, U2, U3, U4, U10, and U19)
     \item 4 variables related to messages (C1, C2, C3, C4)
-    \item Out of bundle amount
+    \item ``out of bundle'' amount
     \item Age
     \item Tenure
     \item Number of contracts
@@ -1149,9 +1147,9 @@ tariff plan are causes of churn are thus consistent with the observations.
         D13                  & \nok & \ok  & \nok & \ok  & \ok  & \nok \\
         Data usage           & \nok & \ok  & \nok & \ok  & \nok & \ok  \\
         Tariff plan          & \nok & \nok & \ok  & \ok  & \nok & \ok  \\
-        Prev tariff plan     & \nok & \nok & \ok  & \ok  & \nok & \ok  \\
+        Previous tariff plan & \nok & \nok & \ok  & \ok  & \nok & \ok  \\
         Out of bundle        & \nok & \ok  & \nok & \nok & \ok  & \nok \\
-        Number contracts     & \nok & \ok  & \nok & \nok & \ok  & \nok \\
+        Nunber of contracts  & \nok & \ok  & \nok & \nok & \ok  & \nok \\
         S7                   & \nok & \ok  & \nok & \ok  & \nok & \nok \\
         H8                   & \nok & \nok & \nok & \ok  & \nok & \ok  \\
         Province             & \nok & \nok & \nok & \ok  & \nok & \ok  \\
@@ -1181,16 +1179,16 @@ results of causal inference from observational data to the following statements:
 \end{itemize}
 
 In the light of our prior knowledge on the causes of churn exposed in section
-\ref{sec:causal_prior}, we would expect the out of bundle variable to stand out
-more explicitly, but it is only given by mIMR with Gaussian assumption. However,
-recall that the distribution of the out of bundle can roughly be modeled as the
-exponential of a Gaussian (see figure \ref{fig:oob}). It is thus easy to
-understand why the other inference methods fail to report the causal link to the
-churn expected by our priors, due to the different estimators of mutual
-information. If it is true that the bill shock is a true cause of churn, then
-the results we observe in table \ref{tab:causal_summary} are not extraordinary.
-In other words, the credence in this theory is slightly, but not significantly,
-undermined.
+\ref{sec:causal_prior}, we would expect the ``out of bundle'' variable to stand
+out more explicitly, but it is only given by mIMR with Gaussian assumption.
+However, recall that the distribution of the ``out of bundle'' can roughly be
+modeled as the exponential of a Gaussian (see figure \ref{fig:oob}). It is thus
+easy to understand why the other inference methods fail to report the causal
+link to the churn expected by our priors, due to the different estimators of
+mutual information. If it is true that the bill shock is a true cause of churn,
+then the results we observe in table \ref{tab:causal_summary} are not
+extraordinary. In other words, the credence in this theory is slightly, but not
+significantly, undermined.
 
 Two of the other causes of churn according to our prior knowledge are customer
 satisfaction and churn due to a move. As explained in section
@@ -1200,10 +1198,37 @@ in table \ref{tab:causal_summary} might be the most direct display of the
 missing causal proxies. This would also explain the presence of variables
 seemingly unrelated to our prior knowledge. However, this hypothesis is somewhat
 far-fetched, and conforming to the faithfulness assumption by engineering
-relevant variables would be much more precise and productive.
+relevant variables would be much more precise and productive. Such missing
+variables could be, for example, the number of calls to the customer service, a
+measure of the network quality, the number of network cuts during a call, and so
+on. Adding these variables would reduce latent confounding if the underlying
+causal hypothesis are actually true.
 
 The last of the four expected causes of churn correspond to a wrong positioning
 of the customer's tariff plan. This cause is supported by the results in a more
 obvious way. The tariff plan and previous tariff plan are reported as causes of
 churn by D2C and mIMR, and is also considered part of the Markov blanket by
-IAMB. This indicates that the wrong positioning theory is not unlikely.
+IAMB. This indicates that the wrong positioning theory is not unlikely. However,
+adding a variable that indicates a wrong positioning would be a
+stronger, more direct way of verifying this hypothesis.
+
+Given the prior knowledge of churn presented in section \ref{sec:causal_prior},
+the mIMR 1 and D2C algorithms seem to better infer relevant variables as direct
+causes. Indeed, the bill shock and the wrong positioning imply that the ``out of
+bundle'', the tariff plan and the data usage are likely causes of churn. The two
+latter are output by mIMR 1 and D2C, whereas mIMR2 outputs the ``out of
+bundle''. A model similar to mIMR1 or D2C, but able to correctly handle
+variables with an exponential distribution such as the ``out of bundle'', would
+be ideal.
+
+Finally, it is important to consider that these results may suffer from sampling
+bias. Given that we use a crude random undersampling technique, some causal
+patterns in the discarded positive samples may be under-represented in the
+resulting training set. This is especially the case for the PC algorithm (using
+10,000 samples), the first implementation of mIMR (10,000 samples), and D2C
+(2,000 samples). And even though the remaining algorithms use far more samples,
+none of them are able to actually take into account the entire set of
+non-churners. Furthermore, we have no theoretical guarantee that an even class
+ratio is best for inferring causal patterns. Reducing sampling bias in causal
+analysis requires the conception of new techniques that are outside the scope of
+this thesis.

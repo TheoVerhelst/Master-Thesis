@@ -633,7 +633,7 @@ ellipse of covariance of the test set is larger than that of the validation set.
 This suggests that, in the test set, there are more churners with very high
 values for variables having a large standard deviation. This probably
 corresponds to the bill shock effect discussed in section \ref{sec:churn_data}:
-a large out of bundle amount, caused by large data consumption, increases
+a large ``out of bundle'' amount, caused by large data consumption, increases
 the probability of churn. In this case, the bill shock is more pronounced in
 the test set, explaining the improvement in predictions.
 
@@ -777,17 +777,17 @@ conclude that selling new contracts to customers will therefore reduce their
 risk of stopping their subscription. Nevertheless, the analysis does not confirm
 this hypothesis: it might be the case that a satisfied customer is typically not
 likely not churn and is also more prone to buying new services. In this case,
-the churn and the number of contracts have a common cause (customer satisfaction),
-and manipulating the number of contracts will not modify the risk of churn. Also,
-the magnitudes of the difference in churn rates should not be considered as
-realistic, meaningful values. We added a standard deviation to each variable,
-regardless of whether a standard deviation makes sense for each variable. For
-example, the number of contracts is typically not distributed according to a
-Gaussian distribution, since it takes as value only small positive integers. We
-can expect most of the decision trees composing our model to choose a split
-point close to 1 for this variable, in order to categorize clients as either
-having 1 contract or more. Adding a standard deviation to the variable would
-change the path of each sample in these trees. This explains the
+the churn and the number of contracts have a common cause (customer
+satisfaction), and manipulating the number of contracts will not modify the risk
+of churn. Also, the magnitudes of the difference in churn rates should not be
+considered as realistic, meaningful values. We added a standard deviation to
+each variable, regardless of whether a standard deviation makes sense for each
+variable. For example, the number of contracts is typically not distributed
+according to a Gaussian distribution, since it takes as value only small
+positive integers. We can expect most of the decision trees composing our model
+to choose a split point close to 1 for this variable, in order to categorize
+clients as either having 1 contract or more. Adding a standard deviation to the
+variable would change the path of each sample in these trees. This explains the
 disproportionate 15\% of difference in churn rate in figure \ref{fig:offset_1m}.
 
 \begin{figure}
