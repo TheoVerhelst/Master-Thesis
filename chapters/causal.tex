@@ -111,10 +111,10 @@ $X\rightarrow Y\rightarrow Z$), \emph{fork} ($X\leftarrow Y\rightarrow Z$), and
 Using the notion of \emph{d-separation}, we define the conditional independence
 between two variables $X$ and $Y$ given $\bm Z$ entailed by a graph $\Gamma$ as
 $X\perp_\Gamma Y|\bm Z$. To illustrate this notion, consider the figure
-\ref{fig:d_sep}. In this fictional exemple, the churn is caused solely by the
+\ref{fig:d_sep}. In this fictional example, the churn is caused solely by the
 amount to pay on the invoice. This invoice is in turn determined by the data
 usage (and indirectly by the age of the customer), and also by the location: a
-customer in a less populated area pays more, because establishing the
+customer in a less populated area pays more because establishing the
 connectivity is more expensive for the operator. In this configuration, the age
 and the invoice are d-separated by the data usage, since knowing the data usage
 of a client removes any information the age may bring about the invoice amount.
@@ -122,7 +122,7 @@ Also, data usage and location are d-separated given the empty set, since there
 is a collider between them. However, if we know the invoice variable, data usage
 and location are no longer d-separated, as the knowledge of the invoice allows
 to \emph{explain away} one variable with the other. If the client has a large
-invoice amount, and is living in a populated area, that must mean that its data
+invoice amount and is living in a populated area, that must mean that its data
 usage was probably  high. Note that knowing the churn variable instead of the
 invoice would have the same effect, since churn is a direct effect of invoice.
 
@@ -390,7 +390,7 @@ and verified in practice. It is believed to be the most important cause of
 churn.
 
 \paragraph{Customer dissatisfaction} Multiple factors influence customer
-satisfaction, including the quality of service and the network quality. A
+satisfaction, including quality of service and network quality. A
 customer having numerous cuts of network connection during phone calls, or
 unable to use properly Orange online services, will be more likely to seek
 better alternatives elsewhere.
@@ -572,7 +572,7 @@ more false positives are included before spouses get into $\MB(Y)$.
 \paragraph{Experimental setting} The entire set of positive samples is used,
 along with a subset of the same size of negative samples. The resulting number
 of samples cannot be disclosed due to confidentiality reasons, as it would allow
-to infer the actual churn rate in the dataset. The GS algorithm has been
+inferring the actual churn rate in the dataset. The GS algorithm has been
 implemented using the independence test in the package \emph{bnlearn}. The
 results are given as a list of members of the Markov blanket.
 
@@ -1014,9 +1014,9 @@ the churn does not change their distributions.
     \centering
     \includegraphics[width=0.8\linewidth]{figures/I_x_x_inter.pdf}
     \caption{Matrix of interaction with the churn. A large negative value
-    indicates that the row and column variables brings more information on churn
+    indicates that the row and column variables bring more information on churn
     when considered together than when considered separately. The  province
-    variable has a high interaction with most other variables, as well as the
+    variable has high interaction with most other variables, as well as the
     tariff plan to a lesser extent.}
     \label{fig:I_x_x_inter}
 \end{figure}
@@ -1025,7 +1025,7 @@ Figures \ref{fig:mimr_perso} and \ref{fig:mimr_original} show the sequence of
 variables selected by the mIMR algorithm, for both our mutual information
 estimator (figure \ref{fig:mimr_perso}) and the estimator assuming Gaussian
 distributions (figure \ref{fig:mimr_original}). Each row corresponds to one
-iteration of the algorithm. The width of the bar correspond to the value of the
+iteration of the algorithm. The width of the bar corresponds to the value of the
 mIMR criterion at this step of the algorithm, that is, the approximated value of
 $I(X_k, Y) - I(\bm X_S, X_k, Y)$ where $Y$ is the churn variable, $X_k$ is the
 variable under consideration and $\bm X_S$ is the set of variables selected
@@ -1079,7 +1079,7 @@ for numerical variables, one-hot encoding is used. All the variables present in
 this plot are related to the tariff plan, previous tariff plan, province of
 residence and hardware-related variables. This is consistent with results of
 mIMR in figure \ref{fig:mimr_perso}, except for the second and last rows,
-related to a categorical socio-demogrpahic variable. Mobile data usage variables
+related to a categorical socio-demographic variable. Mobile data usage variables
 are also present and are the only variables related to service usage in this
 graph.
 
@@ -1088,7 +1088,7 @@ relationship with churn, and this rank is most probably due to an artifact in
 the encoding of variables. Indeed, in the data preparation process, we noticed
 that data entries labeled as churners tend to have more often missing values in
 categorical variables. This issue was caused by the inclusion in the dataset of
-customers that already churned, even though some variables has no longer a valid
+customers that already churned, even though some variables have no longer a valid
 value for these customers. The solution was to remove such entries from the
 dataset, but a related, unforeseen problem may have persisted for these
 categorical variables.
@@ -1197,7 +1197,7 @@ these two putative explanations of churn. The interaction of variables present
 in table \ref{tab:causal_summary} might be the most direct display of the
 missing causal proxies. This would also explain the presence of variables
 seemingly unrelated to our prior knowledge. However, this hypothesis is somewhat
-far-fetched, and conforming to the faithfulness assumption by engineering
+far-fetched and conforming to the faithfulness assumption by engineering
 relevant variables would be much more precise and productive. Such missing
 variables could be, for example, the number of calls to the customer service, a
 measure of the network quality, the number of network cuts during a call, and so

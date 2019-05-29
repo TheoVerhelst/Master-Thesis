@@ -677,7 +677,7 @@ slightly worse than that of the SIM only datasets on small thresholds, but bette
 on larger thresholds. The AUROC is equal to 0.76 for loyalty, whereas the best
 performing configuration for SIM only achieves an AUROC of 0.73. The AUPRC is
 almost double, and this can be seen in figure \ref{fig:pr_loy}. The
-precision is similar to that of the SIM only for low recall, but decreases much
+precision is similar to that of the SIM only for low recall but decreases much
 more slowly. It is still at approximately 0.25 when the recall is 0.2, whereas,
 in the SIM only PR curves, the precision is already at 0.12 at this threshold.
 
@@ -700,7 +700,7 @@ The results of sensitivity analysis are shown in figures
 \ref{fig:var_imp_simo_decrease_accuracy} to \ref{fig:offset_1m}. Figures
 \ref{fig:var_imp_simo_decrease_accuracy} to
 \ref{fig:var_imp_loy_decrease_accuracy} show the variable importance given by
-the random forest models. There is one plot per dataset, and in each plot the
+the random forest models. There is one plot per dataset, and in each plot, the
 importance of each variable is averaged over the 10 models underlying the Easy
 Ensemble meta-model. As discussed in the previous section, the most important
 variables for the SIM only and the SIM only $\Delta$ datasets are almost
@@ -885,7 +885,7 @@ We summarize here the main findings of our experiments on churn prediction. All
 those conclusions are inevitably strongly related to the limited dataset we
 considered. We expect that further validation could help in better supporting
 such conclusions. Also, the variable selection performed in these experiments
-give a useful, restricted scope for the causal analysis in the next chapter by
+gives a useful, restricted scope for the causal analysis in the next chapter by
 discarding irrelevant variables.
 
 \begin{itemize}

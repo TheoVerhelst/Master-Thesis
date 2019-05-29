@@ -99,7 +99,7 @@ is usually conducted through \emph{controlled randomized experiments}
 management, controlled experiments are possible through retention campaigns,
 where the offers made to the customers act as variable manipulations. For
 example, offering a discount would act on the variable ``invoice amount''. Such
-experiment is out of the scope of this master thesis, since it requires time,
+an experiment is out of the scope of this master thesis since it requires time,
 planning, and a collaboration with the direct marketing department. We thus
 focus on data-driven approaches, which are based on some properties of the
 statistical distribution of causally linked variable.
@@ -107,14 +107,14 @@ statistical distribution of causally linked variable.
 To give an example of how causal inference can be conducted without experiment,
 consider the simplistic world where two types of phone are available, an
 expensive one and a cheap one. The expensive phone type makes customers consume
-more data per month than the cheap one, because more data-hungry application are
+more data per month than the cheap one because more data-hungry applications are
 available on it. Also, it increases the probability of churn because these
 phones are targeted more often by concurrent advertisement. We represent such
 causal scenario with a \emph{directed acyclic graph} as in figure
 \ref{fig:simple_causal}. We assume that once we know the phone type of a
 customer, its data usage and its propensity to churn are independent, since
 these are two different consequences of the customer's choice of phone. We
-plotted the data usage against the probability of churn for type of phone in
+plotted the data usage against the probability of churn for each type of phone in
 figure \ref{fig:simple_causal_plot}. A positive correlation can be observed
 between data usage and churn but disappears when considering each phone type
 separately. If a causal relationship also existed between data usage and churn
@@ -123,12 +123,12 @@ conditioning on the phone type. This idea of conditioning to discard putative
 causal links is at the basis of most causal inference algorithms.
 
 Such inference methods are based on a number of modeling assumptions, such as
-ability to represent the underlying causal mechanism by a graph as in figure
+the ability to represent the underlying causal mechanism by a graph as in figure
 \ref{fig:simple_causal}, or the absence of confounding factor. This latter
 assumption would be violated if, in our previous example, the age of the
 customer influences both its choice of phone type and its propensity  to churn.
 The causal inference algorithm would still conclude that the expensive phones
-causes clients to churn, while in reality, they churn solely because of their
+cause clients to churn, while in reality, they churn solely because of their
 young age. This sort of erroneous conclusions can lead to ineffective action in
 retention campaigns. Other inference methods imply other assumptions, and care
 must be exercised when using them.

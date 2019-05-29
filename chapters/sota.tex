@@ -84,7 +84,7 @@ Each tree is constructed from a subset of samples and using only a subset of the
 variables. In the case of a classification task, each of the individual trees
 votes for the output label of a given data example, whereas in the case of a
 regression task, the output is the average prediction of all trees. The
-intuition is to obtain a set of deep trees having a high variance but low biais.
+intuition is to obtain a set of deep trees having a high variance but low bias.
 The average of these trees has thus a lower variance than each individual tree,
 as long as these trees are uncorrelated. The tree are made uncorrelated by
 sampling independently the set of samples and variables used to train each of
@@ -215,7 +215,7 @@ random forests.
 \end{figure}
 
 \textcite{dal2013racing} showed that no unique class balancing method works best
-in all situations, and the they should be evaluated and selected on a case by
+in all situations, and they should be evaluated and selected on a case by
 case basis. An extensive overview and comparison of class balancing techniques
 in churn prediction is given in \parencite{zhu2017empirical}.
 \textcite{dal2014learned} compared several balancing techniques in the context
@@ -415,7 +415,7 @@ phase where false positives are removed from the result.
 
 A filter algorithm is a feature selection method that provides a ranking of the
 input variables, based on some measure of statistical association with the
-target variable. The best ranked variables are then selected in order to reduce
+target variable. The best-ranked variables are then selected in order to reduce
 the computational requirements of the learning algorithm. Usual filter variable
 selection methods suffer from several drawbacks. For example, multiple variables
 may all provide the same information about the target (the extreme case
@@ -430,7 +430,7 @@ assumption about the statistical distribution on the variables, thanks to the
 use of mutual information as a dependency measure. State-of-the-art
 information-theoretic filters include mRMR \parencite{peng2005feature}, DISR
 \parencite{meyer2008information}, REL \parencite{bell2000formalism}, CMIM
-\parencite{fleuret2004fast} and FCBF \parencite{yu2004efficient}. These
+\parencite{fleuret2004fast}, and FCBF \parencite{yu2004efficient}. These
 algorithms vary on whether or not they take complementarity into account, if
 they avoid the estimation of multivariate density and if they return a ranking
 of the variable (as opposed to an unordered set of relevant variables). These
